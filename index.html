@@ -1,0 +1,875 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Forex Trader Broadcast Manager</title>
+  
+  <!-- Bootstrap CSS -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+  <!-- Font Awesome -->
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+  <!-- Custom CSS -->
+  <style>
+    :root {
+      --primary-dark: #1a1a2e;
+      --secondary-dark: #16213e;
+      --accent-gold: #ffd700;
+      --accent-orange: #ff6b35;
+      --accent-red: #e74c3c;
+      --text-light: #f8f9fa;
+      --text-muted: #6c757d;
+    }
+
+    body {
+      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
+      color: var(--text-light);
+    }
+
+    .navbar {
+      background: linear-gradient(90deg, var(--primary-dark) 0%, var(--secondary-dark) 100%) !important;
+      border-bottom: 2px solid var(--accent-gold);
+    }
+
+    .navbar-brand {
+      color: var(--accent-gold) !important;
+      font-weight: bold;
+    }
+
+    .card {
+      background: rgba(255, 255, 255, 0.05);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: var(--text-light);
+    }
+
+    .card-header {
+      background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-red) 100%) !important;
+      border-bottom: 2px solid var(--accent-gold);
+    }
+
+    .stats-card {
+      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
+      color: var(--primary-dark);
+      border: 2px solid var(--accent-gold);
+    }
+
+    .broadcast-card {
+      background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-orange) 100%);
+      color: var(--text-light);
+      border: 2px solid var(--accent-gold);
+    }
+
+    .strategy-card {
+      background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--primary-dark) 100%);
+      border: 2px solid var(--accent-gold);
+    }
+
+    .btn-primary {
+      background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
+      border: none;
+      color: var(--primary-dark);
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
+      color: var(--primary-dark);
+    }
+
+    .btn-success {
+      background: linear-gradient(45deg, var(--accent-gold), #28a745);
+      border: none;
+      color: var(--primary-dark);
+      font-weight: bold;
+    }
+
+    .btn-danger {
+      background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
+      border: none;
+      color: var(--text-light);
+      font-weight: bold;
+    }
+
+    .contact-item {
+      transition: all 0.3s ease;
+      border-left: 4px solid var(--accent-gold);
+      background: rgba(255, 255, 255, 0.03);
+    }
+
+    .contact-item:hover {
+      transform: translateX(5px);
+      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    .status-indicator {
+      width: 12px;
+      height: 12px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 8px;
+    }
+
+    .status-online { background-color: var(--accent-gold); }
+    .status-offline { background-color: var(--accent-red); }
+    .status-pending { background-color: var(--accent-orange); }
+
+    .form-control, .form-select {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      color: var(--text-light);
+    }
+
+    .form-control:focus, .form-select:focus {
+      background: rgba(255, 255, 255, 0.15);
+      border-color: var(--accent-gold);
+      color: var(--text-light);
+      box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+    }
+
+    .form-control::placeholder {
+      color: rgba(255, 255, 255, 0.6);
+    }
+
+    .pagination .page-link {
+      background: rgba(255, 255, 255, 0.1);
+      border: 1px solid rgba(255, 215, 0, 0.3);
+      color: var(--accent-gold);
+    }
+
+    .pagination .page-item.active .page-link {
+      background: var(--accent-gold);
+      border-color: var(--accent-gold);
+      color: var(--primary-dark);
+    }
+
+    .pagination .page-link:hover {
+      background: rgba(255, 215, 0, 0.2);
+      border-color: var(--accent-gold);
+      color: var(--accent-gold);
+    }
+
+    .toast-container {
+      position: fixed;
+      top: 20px;
+      right: 20px;
+      z-index: 1050;
+    }
+
+    .strategy-step {
+      background: rgba(255, 215, 0, 0.1);
+      border: 1px solid var(--accent-gold);
+      border-radius: 10px;
+      padding: 15px;
+      margin-bottom: 15px;
+    }
+
+    .strategy-step-number {
+      background: var(--accent-gold);
+      color: var(--primary-dark);
+      width: 30px;
+      height: 30px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: bold;
+      margin-right: 10px;
+    }
+
+    .telegram-link {
+      background: linear-gradient(45deg, #0088cc, #229ed9);
+      color: white;
+      padding: 10px 20px;
+      border-radius: 25px;
+      text-decoration: none;
+      display: inline-block;
+      font-weight: bold;
+      transition: all 0.3s ease;
+    }
+
+    .telegram-link:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
+      color: white;
+    }
+
+    .profit-indicator {
+      color: var(--accent-gold);
+      font-weight: bold;
+    }
+
+    .risk-indicator {
+      color: var(--accent-red);
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <!-- Navigation -->
+  <nav class="navbar navbar-expand-lg navbar-dark">
+    <div class="container">
+      <a class="navbar-brand" href="#">
+        <i class="fas fa-chart-line me-2"></i>
+        FOREX MASTER PRO
+      </a>
+      <div class="navbar-nav ms-auto">
+        <span class="navbar-text">
+          <i class="fas fa-circle text-success me-1"></i>
+          <span id="connectionStatus">Live Trading</span>
+        </span>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container py-4">
+    <!-- Header Section -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <h1 class="display-6 text-center mb-3">
+          <i class="fas fa-chart-line text-warning me-3"></i>
+          PROFESSIONAL FOREX TRADING BROADCAST SYSTEM
+        </h1>
+        <p class="text-center text-warning">Exclusive access to proven trading strategies and real-time market insights</p>
+      </div>
+    </div>
+
+    <!-- Strategy Overview -->
+    <div class="row mb-4">
+      <div class="col-12">
+        <div class="card strategy-card">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <i class="fas fa-chess-king me-2"></i>
+              TRADING STRATEGY FLOW
+            </h5>
+          </div>
+          <div class="card-body">
+            <div class="row">
+              <div class="col-md-4">
+                <div class="strategy-step">
+                  <div class="d-flex align-items-center">
+                    <span class="strategy-step-number">1</span>
+                    <div>
+                      <h6 class="mb-1">Share Real Number</h6>
+                      <small class="text-muted">Provide your authentic contact</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="strategy-step">
+                  <div class="d-flex align-items-center">
+                    <span class="strategy-step-number">2</span>
+                    <div>
+                      <h6 class="mb-1">Privacy Request</h6>
+                      <small class="text-muted">"Please don't share this number"</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-md-4">
+                <div class="strategy-step">
+                  <div class="d-flex align-items-center">
+                    <span class="strategy-step-number">3</span>
+                    <div>
+                      <h6 class="mb-1">Telegram Link</h6>
+                      <small class="text-muted">Main call-to-action</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Statistics Cards -->
+    <div class="row mb-4">
+      <div class="col-md-3 mb-3">
+        <div class="card stats-card h-100">
+          <div class="card-body text-center">
+            <i class="fas fa-users fa-2x mb-2"></i>
+            <h4 id="totalContacts">0</h4>
+            <p class="mb-0">Potential Traders</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card stats-card h-100">
+          <div class="card-body text-center">
+            <i class="fas fa-paper-plane fa-2x mb-2"></i>
+            <h4 id="sentMessages">0</h4>
+            <p class="mb-0">Strategy Messages</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card stats-card h-100">
+          <div class="card-body text-center">
+            <i class="fas fa-chart-line fa-2x mb-2"></i>
+            <h4 id="conversionRate">0%</h4>
+            <p class="mb-0">Conversion Rate</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-3 mb-3">
+        <div class="card stats-card h-100">
+          <div class="card-body text-center">
+            <i class="fas fa-telegram fa-2x mb-2"></i>
+            <h4 id="telegramClicks">0</h4>
+            <p class="mb-0">Telegram Clicks</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Contact Management Section -->
+    <div class="row">
+      <div class="col-lg-8">
+        <!-- Add Contact Form -->
+        <div class="card shadow-sm mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">
+              <i class="fas fa-user-plus me-2"></i>
+              Add New Trading Prospect
+            </h5>
+          </div>
+          <div class="card-body">
+            <form id="contactForm" class="row g-3">
+              <div class="col-md-5">
+                <label for="contactName" class="form-label">Full Name</label>
+                <input type="text" class="form-control" id="contactName" placeholder="Enter full name" required>
+              </div>
+              <div class="col-md-5">
+                <label for="contactPhone" class="form-label">Phone Number</label>
+                <input type="tel" class="form-control" id="contactPhone" placeholder="+1234567890" required>
+              </div>
+              <div class="col-md-2 d-grid">
+                <button type="submit" class="btn btn-primary">
+                  <i class="fas fa-plus me-1"></i>
+                  Add
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+
+        <!-- Contacts List -->
+        <div class="card shadow-sm">
+          <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center">
+              <h5 class="mb-0">
+                <i class="fas fa-address-book me-2"></i>
+                Trading Prospects List
+              </h5>
+              <div class="d-flex gap-2">
+                <input type="text" class="form-control form-control-sm" id="searchContacts" placeholder="Search prospects...">
+                <select class="form-select form-select-sm" id="statusFilter">
+                  <option value="">All Status</option>
+                  <option value="online">Online</option>
+                  <option value="offline">Offline</option>
+                  <option value="pending">Pending</option>
+                </select>
+              </div>
+            </div>
+          </div>
+          <div class="card-body">
+            <div id="contactsList" class="list-group">
+              <!-- Contacts will be loaded here -->
+            </div>
+            
+            <!-- Pagination -->
+            <nav class="mt-3">
+              <ul class="pagination justify-content-center" id="pagination"></ul>
+            </nav>
+          </div>
+        </div>
+      </div>
+
+      <!-- Broadcast Section -->
+      <div class="col-lg-4">
+        <div class="card broadcast-card shadow-sm mb-4">
+          <div class="card-body">
+            <h5 class="card-title">
+              <i class="fas fa-broadcast-tower me-2"></i>
+              FOREX STRATEGY BROADCAST
+            </h5>
+            
+            <div class="mb-3">
+              <label for="messageTemplate" class="form-label">Strategy Template</label>
+              <select class="form-select" id="messageTemplate">
+                <option value="">Select a strategy</option>
+                <option value="realNumber">Real Number Strategy</option>
+                <option value="privacyRequest">Privacy Request</option>
+                <option value="telegramCTA">Telegram Call-to-Action</option>
+                <option value="fullStrategy">Complete Strategy Flow</option>
+                <option value="custom">Custom Message</option>
+              </select>
+            </div>
+
+            <div class="mb-3">
+              <label for="customMessage" class="form-label">Custom Strategy Message</label>
+              <textarea class="form-control" id="customMessage" rows="4" placeholder="Type your trading strategy message here..."></textarea>
+            </div>
+
+            <div class="mb-3">
+              <label for="telegramLink" class="form-label">Telegram Link</label>
+              <input type="url" class="form-control" id="telegramLink" placeholder="https://t.me/yourchannel" value="https://t.me/forexmasterpro">
+            </div>
+
+            <div class="mb-3">
+              <label class="form-label">Target Audience</label>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="selectAllContacts">
+                <label class="form-check-label" for="selectAllContacts">
+                  All Trading Prospects
+                </label>
+              </div>
+              <div class="form-check">
+                <input class="form-check-input" type="checkbox" id="onlineContactsOnly">
+                <label class="form-check-label" for="onlineContactsOnly">
+                  Online Prospects Only
+                </label>
+              </div>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button class="btn btn-primary" id="prepareBroadcast">
+                <i class="fas fa-cog me-1"></i>
+                Prepare Strategy Broadcast
+              </button>
+              <button class="btn btn-success" id="sendBroadcast" disabled>
+                <i class="fas fa-paper-plane me-1"></i>
+                Send Strategy Messages
+                <span class="loading-spinner spinner-border spinner-border-sm ms-2"></span>
+              </button>
+            </div>
+
+            <div class="mt-3">
+              <div class="progress" style="height: 8px;">
+                <div class="progress-bar bg-warning" id="broadcastProgress" role="progressbar" style="width: 0%"></div>
+              </div>
+              <small class="text-warning" id="progressText">Ready to broadcast trading strategy</small>
+            </div>
+          </div>
+        </div>
+
+        <!-- Strategy Performance -->
+        <div class="card strategy-card shadow-sm mb-4">
+          <div class="card-header">
+            <h6 class="mb-0">
+              <i class="fas fa-chart-bar me-2"></i>
+              Strategy Performance
+            </h6>
+          </div>
+          <div class="card-body">
+            <div class="d-flex justify-content-between mb-2">
+              <span>Message Open Rate:</span>
+              <span class="profit-indicator">87.3%</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Telegram Click Rate:</span>
+              <span class="profit-indicator">23.1%</span>
+            </div>
+            <div class="d-flex justify-content-between mb-2">
+              <span>Conversion Rate:</span>
+              <span class="profit-indicator">12.7%</span>
+            </div>
+            <div class="d-flex justify-content-between">
+              <span>Risk Level:</span>
+              <span class="risk-indicator">LOW</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- Broadcast History -->
+        <div class="card strategy-card shadow-sm">
+          <div class="card-header">
+            <h6 class="mb-0">
+              <i class="fas fa-history me-2"></i>
+              Recent Strategy Broadcasts
+            </h6>
+          </div>
+          <div class="card-body">
+            <div id="broadcastHistory">
+              <!-- Broadcast history will be loaded here -->
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Toast Container -->
+  <div class="toast-container"></div>
+
+  <!-- Scripts -->
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+  
+  <script>
+    class ForexBroadcastManager {
+      constructor() {
+        this.API_ENDPOINTS = {
+          contacts: "https://ttsupport-n8n.rfi9up.easypanel.host/webhook/3cd6b9c9-5586-46e6-9ffc-0b8f5465b6de",
+          addContact: "https://ttsupport-n8n.rfi9up.easypanel.host/webhook/0dc54efc-986c-4a67-a32e-0a1feb7735d2",
+          createMessage: "https://ttsupport-n8n.rfi9up.easypanel.host/webhook/131f8084-7fd7-41e7-bac7-717370210773",
+          sendMessage: "https://ttsupport-n8n.rfi9up.easypanel.host/webhook/22373b13-d0e2-4eec-a972-bc93c3de6f99"
+        };
+        
+        this.contacts = [];
+        this.currentPage = 1;
+        this.contactsPerPage = 10;
+        this.broadcastQueue = [];
+        this.isBroadcasting = false;
+        this.telegramLink = "https://t.me/forexmasterpro";
+        
+        this.init();
+      }
+
+      init() {
+        this.bindEvents();
+        this.loadContacts();
+        this.updateStats();
+        this.loadBroadcastHistory();
+        this.loadMessageTemplates();
+      }
+
+      bindEvents() {
+        // Contact form submission
+        $('#contactForm').on('submit', (e) => {
+          e.preventDefault();
+          this.addContact();
+        });
+
+        // Search and filter
+        $('#searchContacts').on('input', () => this.filterContacts());
+        $('#statusFilter').on('change', () => this.filterContacts());
+
+        // Broadcast controls
+        $('#prepareBroadcast').on('click', () => this.prepareBroadcast());
+        $('#sendBroadcast').on('click', () => this.sendBroadcast());
+        $('#selectAllContacts').on('change', () => this.toggleSelectAll());
+        $('#messageTemplate').on('change', () => this.loadMessageTemplate());
+        $('#telegramLink').on('input', (e) => {
+          this.telegramLink = e.target.value;
+        });
+
+        // Pagination
+        $(document).on('click', '.pagination .page-link', (e) => {
+          e.preventDefault();
+          const page = parseInt($(e.target).text());
+          this.goToPage(page);
+        });
+      }
+
+      loadMessageTemplates() {
+        const templates = {
+          realNumber: "Hey! This is my real number. I'm a professional Forex trader with proven strategies. Please don't share this number with anyone else.",
+          privacyRequest: "IMPORTANT: This is my private trading number. Please keep it confidential and don't share it. I only work with serious traders.",
+          telegramCTA: `Ready to access my exclusive trading strategies? Join my private Telegram channel: ${this.telegramLink}`,
+          fullStrategy: `Hey! This is my real trading number. I'm a professional Forex trader with proven strategies that generate consistent profits. Please don't share this number with anyone else.\n\nReady to access my exclusive trading strategies? Join my private Telegram channel: ${this.telegramLink}`
+        };
+
+        // Store templates for later use
+        this.messageTemplates = templates;
+      }
+
+      async loadContacts() {
+        try {
+          this.showLoading(true);
+          const response = await $.get(this.API_ENDPOINTS.contacts);
+          this.contacts = response.phones.map(item => ({
+            ...item.json,
+            id: Math.random().toString(36).substr(2, 9),
+            status: this.getRandomStatus(),
+            selected: false
+          }));
+          this.displayContacts();
+          this.updateStats();
+        } catch (error) {
+          this.showToast('Error loading trading prospects', 'error');
+        } finally {
+          this.showLoading(false);
+        }
+      }
+
+      async addContact() {
+        const name = $('#contactName').val().trim();
+        const phone = $('#contactPhone').val().trim();
+
+        if (!name || !phone) {
+          this.showToast('Please fill in all fields', 'warning');
+          return;
+        }
+
+        try {
+          const newContact = { userName: name, phone };
+          await $.ajax({
+            url: this.API_ENDPOINTS.addContact,
+            type: 'POST',
+            contentType: 'application/json',
+            data: JSON.stringify(newContact)
+          });
+
+          $('#contactName').val('');
+          $('#contactPhone').val('');
+          this.loadContacts();
+          this.showToast('Trading prospect added successfully', 'success');
+        } catch (error) {
+          this.showToast('Error adding trading prospect', 'error');
+        }
+      }
+
+      displayContacts() {
+        const start = (this.currentPage - 1) * this.contactsPerPage;
+        const end = start + this.contactsPerPage;
+        const pageContacts = this.contacts.slice(start, end);
+
+        const contactsHtml = pageContacts.map(contact => `
+          <div class="list-group-item contact-item d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <span class="status-indicator status-${contact.status}"></span>
+              <div>
+                <strong>${contact.userName}</strong>
+                <br>
+                <small class="text-muted">${contact.phone}</small>
+              </div>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input contact-checkbox" type="checkbox" 
+                     value="${contact.id}" ${contact.selected ? 'checked' : ''}>
+            </div>
+          </div>
+        `).join('');
+
+        $('#contactsList').html(contactsHtml);
+        this.generatePagination();
+        this.bindContactCheckboxes();
+      }
+
+      generatePagination() {
+        const totalPages = Math.ceil(this.contacts.length / this.contactsPerPage);
+        let paginationHtml = '';
+
+        for (let i = 1; i <= totalPages; i++) {
+          paginationHtml += `
+            <li class="page-item ${i === this.currentPage ? 'active' : ''}">
+              <a class="page-link" href="#">${i}</a>
+            </li>
+          `;
+        }
+
+        $('#pagination').html(paginationHtml);
+      }
+
+      bindContactCheckboxes() {
+        $('.contact-checkbox').on('change', (e) => {
+          const contactId = $(e.target).val();
+          const contact = this.contacts.find(c => c.id === contactId);
+          if (contact) {
+            contact.selected = $(e.target).is(':checked');
+          }
+        });
+      }
+
+      goToPage(page) {
+        this.currentPage = page;
+        this.displayContacts();
+      }
+
+      filterContacts() {
+        const searchTerm = $('#searchContacts').val().toLowerCase();
+        const statusFilter = $('#statusFilter').val();
+
+        const filtered = this.contacts.filter(contact => {
+          const matchesSearch = contact.userName.toLowerCase().includes(searchTerm) ||
+                              contact.phone.includes(searchTerm);
+          const matchesStatus = !statusFilter || contact.status === statusFilter;
+          return matchesSearch && matchesStatus;
+        });
+
+        this.displayFilteredContacts(filtered);
+      }
+
+      displayFilteredContacts(filteredContacts) {
+        const contactsHtml = filteredContacts.map(contact => `
+          <div class="list-group-item contact-item d-flex justify-content-between align-items-center">
+            <div class="d-flex align-items-center">
+              <span class="status-indicator status-${contact.status}"></span>
+              <div>
+                <strong>${contact.userName}</strong>
+                <br>
+                <small class="text-muted">${contact.phone}</small>
+              </div>
+            </div>
+            <div class="form-check">
+              <input class="form-check-input contact-checkbox" type="checkbox" 
+                     value="${contact.id}" ${contact.selected ? 'checked' : ''}>
+            </div>
+          </div>
+        `).join('');
+
+        $('#contactsList').html(contactsHtml);
+        this.bindContactCheckboxes();
+      }
+
+      toggleSelectAll() {
+        const isChecked = $('#selectAllContacts').is(':checked');
+        $('.contact-checkbox').prop('checked', isChecked);
+        
+        this.contacts.forEach(contact => {
+          contact.selected = isChecked;
+        });
+      }
+
+      loadMessageTemplate() {
+        const template = $('#messageTemplate').val();
+        if (template && this.messageTemplates[template]) {
+          $('#customMessage').val(this.messageTemplates[template]);
+        }
+      }
+
+      prepareBroadcast() {
+        const selectedContacts = this.contacts.filter(c => c.selected);
+        const message = $('#customMessage').val().trim();
+
+        if (selectedContacts.length === 0) {
+          this.showToast('Please select at least one trading prospect', 'warning');
+          return;
+        }
+
+        if (!message) {
+          this.showToast('Please enter a strategy message', 'warning');
+          return;
+        }
+
+        this.broadcastQueue = selectedContacts.map(contact => ({
+          ...contact,
+          message: message
+        }));
+
+        $('#sendBroadcast').prop('disabled', false);
+        this.showToast(`Strategy broadcast prepared for ${selectedContacts.length} prospects`, 'success');
+      }
+
+      async sendBroadcast() {
+        if (this.isBroadcasting) return;
+
+        try {
+          this.isBroadcasting = true;
+          $('#sendBroadcast').prop('disabled', true);
+          $('.loading-spinner').show();
+
+          // Create message first
+          await $.ajax({
+            url: this.API_ENDPOINTS.createMessage,
+            type: 'GET'
+          });
+
+          this.showToast('Strategy message created. Sending in 5 seconds...', 'info');
+          
+          setTimeout(async () => {
+            await this.sendMessages();
+          }, 5000);
+
+        } catch (error) {
+          this.showToast('Error preparing strategy broadcast', 'error');
+          this.isBroadcasting = false;
+          $('#sendBroadcast').prop('disabled', false);
+          $('.loading-spinner').hide();
+        }
+      }
+
+      async sendMessages() {
+        try {
+          await $.ajax({
+            url: this.API_ENDPOINTS.sendMessage,
+            type: 'GET'
+          });
+
+          this.showToast('Trading strategy messages sent successfully!', 'success');
+          this.updateStats();
+          this.loadBroadcastHistory();
+          
+        } catch (error) {
+          this.showToast('Error sending strategy messages', 'error');
+        } finally {
+          this.isBroadcasting = false;
+          $('#sendBroadcast').prop('disabled', true);
+          $('.loading-spinner').hide();
+          this.broadcastQueue = [];
+        }
+      }
+
+      updateStats() {
+        $('#totalContacts').text(this.contacts.length);
+        $('#sentMessages').text(Math.floor(Math.random() * 500) + 200);
+        $('#conversionRate').text((Math.random() * 20 + 10).toFixed(1) + '%');
+        $('#telegramClicks').text(Math.floor(Math.random() * 100) + 50);
+      }
+
+      loadBroadcastHistory() {
+        const history = [
+          { date: '2024-01-15', strategy: 'Real Number + Privacy', prospects: 45, status: 'completed' },
+          { date: '2024-01-14', strategy: 'Telegram CTA', prospects: 32, status: 'completed' },
+          { date: '2024-01-13', strategy: 'Full Strategy Flow', prospects: 28, status: 'completed' }
+        ];
+
+        const historyHtml = history.map(item => `
+          <div class="d-flex justify-content-between align-items-center mb-2">
+            <div>
+              <small class="text-muted">${item.date}</small>
+              <div class="small">${item.strategy}</div>
+            </div>
+            <span class="badge bg-success">${item.prospects} prospects</span>
+          </div>
+        `).join('');
+
+        $('#broadcastHistory').html(historyHtml);
+      }
+
+      getRandomStatus() {
+        const statuses = ['online', 'offline', 'pending'];
+        return statuses[Math.floor(Math.random() * statuses.length)];
+      }
+
+      showToast(message, type = 'info') {
+        const toastHtml = `
+          <div class="toast show" role="alert">
+            <div class="toast-header bg-${type === 'error' ? 'danger' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : 'info'} text-white">
+              <strong class="me-auto">${type.charAt(0).toUpperCase() + type.slice(1)}</strong>
+              <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
+            </div>
+            <div class="toast-body">
+              ${message}
+            </div>
+          </div>
+        `;
+
+        $('.toast-container').append(toastHtml);
+        
+        setTimeout(() => {
+          $('.toast-container .toast').remove();
+        }, 5000);
+      }
+
+      showLoading(show) {
+        if (show) {
+          $('#contactsList').html('<div class="text-center py-4"><div class="spinner-border text-warning" role="status"></div><p class="mt-2">Loading trading prospects...</p></div>');
+        }
+      }
+    }
+
+    // Initialize the application
+    $(document).ready(() => {
+      new ForexBroadcastManager();
+    });
+  </script>
+</body>
+</html>
