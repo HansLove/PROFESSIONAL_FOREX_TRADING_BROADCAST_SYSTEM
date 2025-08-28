@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Forex Trader Broadcast Manager</title>
+  <title>Forex Broadcast Manager</title>
   
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
@@ -12,146 +12,256 @@
   <!-- Custom CSS -->
   <style>
     :root {
-      --primary-dark: #1a1a2e;
-      --secondary-dark: #16213e;
-      --accent-gold: #ffd700;
-      --accent-orange: #ff6b35;
-      --accent-red: #e74c3c;
-      --text-light: #f8f9fa;
-      --text-muted: #6c757d;
+      --bg-primary: #0f0f23;
+      --bg-secondary: #1a1a2e;
+      --bg-card: #16213e;
+      --text-primary: #ffffff;
+      --text-secondary: #b8b8b8;
+      --accent: #4f46e5;
+      --accent-hover: #6366f1;
+      --success: #10b981;
+      --warning: #f59e0b;
+      --border: #374151;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
-      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
-      color: var(--text-light);
+      background: var(--bg-primary);
+      color: var(--text-primary);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
     }
 
+    /* Navbar */
     .navbar {
-      background: linear-gradient(90deg, var(--primary-dark) 0%, var(--secondary-dark) 100%) !important;
-      border-bottom: 2px solid var(--accent-gold);
+      background: var(--bg-secondary) !important;
+      border-bottom: 1px solid var(--border);
     }
 
     .navbar-brand {
-      color: var(--accent-gold) !important;
-      font-weight: bold;
+      color: var(--text-primary) !important;
+      font-weight: 600;
+      font-size: 1.2rem;
     }
 
+    /* Cards */
     .card {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-light);
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      color: var(--text-primary);
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1);
     }
 
     .card-header {
-      background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-red) 100%) !important;
-      border-bottom: 2px solid var(--accent-gold);
+      background: var(--bg-secondary) !important;
+      border-bottom: 1px solid var(--border);
+      color: var(--text-primary);
+      font-weight: 600;
+      padding: 1rem 1.5rem;
+      border-radius: 12px 12px 0 0;
     }
 
+    .card-body {
+      padding: 1.5rem;
+    }
+
+    /* Stats Cards */
     .stats-card {
-      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
-      color: var(--primary-dark);
-      border: 2px solid var(--accent-gold);
+      background: var(--bg-card);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+      text-align: center;
+      transition: all 0.2s ease;
     }
 
-    .broadcast-card {
-      background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-orange) 100%);
-      color: var(--text-light);
-      border: 2px solid var(--accent-gold);
+    .stats-card:hover {
+      transform: translateY(-3px);
+      border-color: var(--accent);
     }
 
-    .strategy-card {
-      background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--primary-dark) 100%);
-      border: 2px solid var(--accent-gold);
+    .stats-card i {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--accent);
+    }
+
+    .stats-card h4 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--text-primary);
+    }
+
+    .stats-card p {
+      font-weight: 500;
+      color: var(--text-secondary);
+      margin: 0;
+    }
+
+    /* Buttons */
+    .btn {
+      border-radius: 8px;
+      font-weight: 600;
+      padding: 0.75rem 1.5rem;
+      transition: all 0.2s ease;
+      border: none;
     }
 
     .btn-primary {
-      background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
-      border: none;
-      color: var(--primary-dark);
-      font-weight: bold;
-      transition: all 0.3s ease;
+      background: var(--accent);
+      color: var(--text-primary);
     }
 
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
-      color: var(--primary-dark);
+      background: var(--accent-hover);
+      transform: translateY(-1px);
     }
 
     .btn-success {
-      background: linear-gradient(45deg, var(--accent-gold), #28a745);
-      border: none;
-      color: var(--primary-dark);
-      font-weight: bold;
+      background: var(--success);
+      color: var(--text-primary);
     }
 
-    .btn-danger {
-      background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
-      border: none;
-      color: var(--text-light);
-      font-weight: bold;
+    .btn-success:hover {
+      background: #059669;
+      transform: translateY(-1px);
     }
 
-    .contact-item {
-      transition: all 0.3s ease;
-      border-left: 4px solid var(--accent-gold);
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .contact-item:hover {
-      transform: translateX(5px);
-      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .status-indicator {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 8px;
-    }
-
-    .status-online { background-color: var(--accent-gold); }
-    .status-offline { background-color: var(--accent-red); }
-    .status-pending { background-color: var(--accent-orange); }
-
+    /* Form Controls */
     .form-control, .form-select {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 215, 0, 0.3);
-      color: var(--text-light);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      color: var(--text-primary);
+      padding: 0.75rem 1rem;
+      transition: all 0.2s ease;
     }
 
     .form-control:focus, .form-select:focus {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: var(--accent-gold);
-      color: var(--text-light);
-      box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+      background: var(--bg-secondary);
+      border-color: var(--accent);
+      color: var(--text-primary);
+      box-shadow: 0 0 0 0.2rem rgba(79, 70, 229, 0.25);
+      outline: none;
     }
 
     .form-control::placeholder {
-      color: rgba(255, 255, 255, 0.6);
+      color: var(--text-secondary);
     }
 
+    .form-label {
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Contact Items */
+    .contact-item {
+      transition: all 0.2s ease;
+      border-left: 3px solid var(--accent);
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      margin-bottom: 0.5rem;
+      padding: 1rem;
+    }
+
+    .contact-item:hover {
+      transform: translateX(3px);
+      background: var(--bg-card);
+    }
+
+    /* Status Indicators */
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .status-online { background-color: var(--success); }
+    .status-offline { background-color: #ef4444; }
+    .status-pending { background-color: var(--warning); }
+
+    /* Pagination */
     .pagination .page-link {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 215, 0, 0.3);
-      color: var(--accent-gold);
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      border-radius: 6px;
+      margin: 0 2px;
+      transition: all 0.2s ease;
     }
 
     .pagination .page-item.active .page-link {
-      background: var(--accent-gold);
-      border-color: var(--accent-gold);
-      color: var(--primary-dark);
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--text-primary);
+      font-weight: 600;
     }
 
     .pagination .page-link:hover {
-      background: rgba(255, 215, 0, 0.2);
-      border-color: var(--accent-gold);
-      color: var(--accent-gold);
+      background: var(--bg-card);
+      border-color: var(--border);
+      color: var(--text-primary);
     }
 
+    /* Strategy Steps */
+    .strategy-step {
+      background: var(--bg-secondary);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 1.25rem;
+      margin-bottom: 1rem;
+      transition: all 0.2s ease;
+    }
+
+    .strategy-step:hover {
+      transform: translateY(-2px);
+      border-color: var(--accent);
+    }
+
+    .strategy-step-number {
+      background: var(--accent);
+      color: var(--text-primary);
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-right: 15px;
+      font-size: 0.9rem;
+    }
+
+    /* Progress Bar */
+    .progress {
+      background: var(--bg-secondary);
+      border-radius: 8px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      background: var(--accent);
+      border-radius: 8px;
+      transition: width 0.3s ease;
+    }
+
+    /* Toast Container */
     .toast-container {
       position: fixed;
       top: 20px;
@@ -159,52 +269,67 @@
       z-index: 1050;
     }
 
-    .strategy-step {
-      background: rgba(255, 215, 0, 0.1);
-      border: 1px solid var(--accent-gold);
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
+    /* Utility Classes */
+    .text-accent {
+      color: var(--accent) !important;
     }
 
-    .strategy-step-number {
-      background: var(--accent-gold);
-      color: var(--primary-dark);
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      margin-right: 10px;
+    .bg-dark {
+      background: var(--bg-card) !important;
     }
 
-    .telegram-link {
-      background: linear-gradient(45deg, #0088cc, #229ed9);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 25px;
-      text-decoration: none;
-      display: inline-block;
-      font-weight: bold;
-      transition: all 0.3s ease;
+    .border-accent {
+      border: 1px solid var(--accent) !important;
     }
 
-    .telegram-link:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
-      color: white;
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .navbar-brand {
+        font-size: 1.1rem;
+      }
+      
+      .display-6 {
+        font-size: 1.75rem;
+      }
+      
+      .card-body {
+        padding: 1rem;
+      }
+      
+      .btn {
+        padding: 0.6rem 1.2rem;
+        font-size: 0.9rem;
+      }
+      
+      .stats-card h4 {
+        font-size: 1.5rem;
+      }
+      
+      .stats-card i {
+        font-size: 1.75rem;
+      }
     }
 
-    .profit-indicator {
-      color: var(--accent-gold);
-      font-weight: bold;
-    }
-
-    .risk-indicator {
-      color: var(--accent-red);
-      font-weight: bold;
+    @media (max-width: 576px) {
+      .container {
+        padding: 0 15px;
+      }
+      
+      .strategy-step {
+        padding: 1rem;
+      }
+      
+      .strategy-step-number {
+        width: 28px;
+        height: 28px;
+        font-size: 0.8rem;
+        margin-right: 12px;
+      }
+      
+      .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
     }
   </style>
 </head>
@@ -214,70 +339,81 @@
     <div class="container">
       <a class="navbar-brand" href="#">
         <i class="fas fa-chart-line me-2"></i>
-        FOREX MASTER PRO
+        FOREX BROADCAST
       </a>
       <div class="navbar-nav ms-auto">
         <span class="navbar-text">
           <i class="fas fa-circle text-success me-1"></i>
-          <span id="connectionStatus">Live Trading</span>
+          <span id="connectionStatus">Connected</span>
         </span>
       </div>
     </div>
   </nav>
 
   <div class="container py-4">
-    <!-- Header Section -->
+    <!-- Header -->
     <div class="row mb-4">
       <div class="col-12">
         <h1 class="display-6 text-center mb-3">
-          <i class="fas fa-chart-line text-warning me-3"></i>
-          PROFESSIONAL FOREX TRADING BROADCAST SYSTEM
+          <i class="fas fa-chart-line text-accent me-3"></i>
+          FOREX BROADCAST SYSTEM
         </h1>
-        <p class="text-center text-warning">Exclusive access to proven trading strategies and real-time market insights</p>
+        <p class="text-center text-secondary">Professional trading strategy broadcasts</p>
       </div>
     </div>
 
-    <!-- Strategy Overview -->
+    <!-- Strategy Flow -->
     <div class="row mb-4">
       <div class="col-12">
         <div class="card strategy-card">
           <div class="card-header">
             <h5 class="mb-0">
-              <i class="fas fa-chess-king me-2"></i>
-              TRADING STRATEGY FLOW
+              <i class="fas fa-robot me-2"></i>
+              STRATEGY FLOW
             </h5>
           </div>
           <div class="card-body">
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-lg-3 col-md-6 mb-3">
                 <div class="strategy-step">
                   <div class="d-flex align-items-center">
                     <span class="strategy-step-number">1</span>
                     <div>
-                      <h6 class="mb-1">Share Real Number</h6>
-                      <small class="text-muted">Provide your authentic contact</small>
+                      <h6 class="mb-1">Share Number</h6>
+                      <small class="text-secondary">Establish authenticity</small>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-lg-3 col-md-6 mb-3">
                 <div class="strategy-step">
                   <div class="d-flex align-items-center">
                     <span class="strategy-step-number">2</span>
                     <div>
                       <h6 class="mb-1">Privacy Request</h6>
-                      <small class="text-muted">"Please don't share this number"</small>
+                      <small class="text-secondary">Create exclusivity</small>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-lg-3 col-md-6 mb-3">
                 <div class="strategy-step">
                   <div class="d-flex align-items-center">
                     <span class="strategy-step-number">3</span>
                     <div>
-                      <h6 class="mb-1">Telegram Link</h6>
-                      <small class="text-muted">Main call-to-action</small>
+                      <h6 class="mb-1">AI Analysis</h6>
+                      <small class="text-secondary">Categorize responses</small>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-6 mb-3">
+                <div class="strategy-step">
+                  <div class="d-flex align-items-center">
+                    <span class="strategy-step-number">4</span>
+                    <div>
+                      <h6 class="mb-1">Telegram CTA</h6>
+                      <small class="text-secondary">Convert to subscribers</small>
                     </div>
                   </div>
                 </div>
@@ -288,14 +424,14 @@
       </div>
     </div>
 
-    <!-- Statistics Cards -->
+    <!-- Statistics -->
     <div class="row mb-4">
       <div class="col-md-3 mb-3">
         <div class="card stats-card h-100">
           <div class="card-body text-center">
             <i class="fas fa-users fa-2x mb-2"></i>
             <h4 id="totalContacts">0</h4>
-            <p class="mb-0">Potential Traders</p>
+            <p class="mb-0">Prospects</p>
           </div>
         </div>
       </div>
@@ -304,7 +440,7 @@
           <div class="card-body text-center">
             <i class="fas fa-paper-plane fa-2x mb-2"></i>
             <h4 id="sentMessages">0</h4>
-            <p class="mb-0">Strategy Messages</p>
+            <p class="mb-0">Messages</p>
           </div>
         </div>
       </div>
@@ -313,7 +449,7 @@
           <div class="card-body text-center">
             <i class="fas fa-chart-line fa-2x mb-2"></i>
             <h4 id="conversionRate">0%</h4>
-            <p class="mb-0">Conversion Rate</p>
+            <p class="mb-0">Conversion</p>
           </div>
         </div>
       </div>
@@ -322,31 +458,31 @@
           <div class="card-body text-center">
             <i class="fas fa-telegram fa-2x mb-2"></i>
             <h4 id="telegramClicks">0</h4>
-            <p class="mb-0">Telegram Clicks</p>
+            <p class="mb-0">Clicks</p>
           </div>
         </div>
       </div>
     </div>
 
-    <!-- Contact Management Section -->
+    <!-- Main Content -->
     <div class="row">
       <div class="col-lg-8">
         <!-- Add Contact Form -->
-        <div class="card shadow-sm mb-4">
+        <div class="card mb-4">
           <div class="card-header">
             <h5 class="mb-0">
               <i class="fas fa-user-plus me-2"></i>
-              Add New Trading Prospect
+              Add Prospect
             </h5>
           </div>
           <div class="card-body">
             <form id="contactForm" class="row g-3">
               <div class="col-md-5">
-                <label for="contactName" class="form-label">Full Name</label>
-                <input type="text" class="form-control" id="contactName" placeholder="Enter full name" required>
+                <label for="contactName" class="form-label">Name</label>
+                <input type="text" class="form-control" id="contactName" placeholder="Full name" required>
               </div>
               <div class="col-md-5">
-                <label for="contactPhone" class="form-label">Phone Number</label>
+                <label for="contactPhone" class="form-label">Phone</label>
                 <input type="tel" class="form-control" id="contactPhone" placeholder="+1234567890" required>
               </div>
               <div class="col-md-2 d-grid">
@@ -360,17 +496,17 @@
         </div>
 
         <!-- Contacts List -->
-        <div class="card shadow-sm">
+        <div class="card">
           <div class="card-header">
             <div class="d-flex justify-content-between align-items-center">
               <h5 class="mb-0">
                 <i class="fas fa-address-book me-2"></i>
-                Trading Prospects List
+                Prospects
               </h5>
               <div class="d-flex gap-2">
-                <input type="text" class="form-control form-control-sm" id="searchContacts" placeholder="Search prospects...">
+                <input type="text" class="form-control form-control-sm" id="searchContacts" placeholder="Search...">
                 <select class="form-select form-select-sm" id="statusFilter">
-                  <option value="">All Status</option>
+                  <option value="">All</option>
                   <option value="online">Online</option>
                   <option value="offline">Offline</option>
                   <option value="pending">Pending</option>
@@ -393,28 +529,29 @@
 
       <!-- Broadcast Section -->
       <div class="col-lg-4">
-        <div class="card broadcast-card shadow-sm mb-4">
-          <div class="card-body">
-            <h5 class="card-title">
+        <div class="card mb-4">
+          <div class="card-header">
+            <h5 class="mb-0">
               <i class="fas fa-broadcast-tower me-2"></i>
-              FOREX STRATEGY BROADCAST
+              BROADCAST
             </h5>
-            
+          </div>
+          <div class="card-body">
             <div class="mb-3">
-              <label for="messageTemplate" class="form-label">Strategy Template</label>
+              <label for="messageTemplate" class="form-label">Template</label>
               <select class="form-select" id="messageTemplate">
-                <option value="">Select a strategy</option>
-                <option value="realNumber">Real Number Strategy</option>
+                <option value="">Choose template</option>
+                <option value="realNumber">Real Number</option>
                 <option value="privacyRequest">Privacy Request</option>
-                <option value="telegramCTA">Telegram Call-to-Action</option>
-                <option value="fullStrategy">Complete Strategy Flow</option>
-                <option value="custom">Custom Message</option>
+                <option value="telegramCTA">Telegram CTA</option>
+                <option value="fullStrategy">Complete Strategy</option>
+                <option value="custom">Custom</option>
               </select>
             </div>
 
             <div class="mb-3">
-              <label for="customMessage" class="form-label">Custom Strategy Message</label>
-              <textarea class="form-control" id="customMessage" rows="4" placeholder="Type your trading strategy message here..."></textarea>
+              <label for="customMessage" class="form-label">Message</label>
+              <textarea class="form-control" id="customMessage" rows="4" placeholder="Type your message..."></textarea>
             </div>
 
             <div class="mb-3">
@@ -423,17 +560,17 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label">Target Audience</label>
+              <label class="form-label">Recipients</label>
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="selectAllContacts">
                 <label class="form-check-label" for="selectAllContacts">
-                  All Trading Prospects
+                  All Prospects
                 </label>
               </div>
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="onlineContactsOnly">
                 <label class="form-check-label" for="onlineContactsOnly">
-                  Online Prospects Only
+                  Online Only
                 </label>
               </div>
             </div>
@@ -441,63 +578,63 @@
             <div class="d-grid gap-2">
               <button class="btn btn-primary" id="prepareBroadcast">
                 <i class="fas fa-cog me-1"></i>
-                Prepare Strategy Broadcast
+                Prepare
               </button>
               <button class="btn btn-success" id="sendBroadcast" disabled>
                 <i class="fas fa-paper-plane me-1"></i>
-                Send Strategy Messages
+                Send
                 <span class="loading-spinner spinner-border spinner-border-sm ms-2"></span>
               </button>
             </div>
 
             <div class="mt-3">
               <div class="progress" style="height: 8px;">
-                <div class="progress-bar bg-warning" id="broadcastProgress" role="progressbar" style="width: 0%"></div>
+                <div class="progress-bar" id="broadcastProgress" role="progressbar" style="width: 0%"></div>
               </div>
-              <small class="text-warning" id="progressText">Ready to broadcast trading strategy</small>
+              <small class="text-secondary" id="progressText">Ready</small>
             </div>
           </div>
         </div>
 
-        <!-- Strategy Performance -->
-        <div class="card strategy-card shadow-sm mb-4">
+        <!-- Performance -->
+        <div class="card mb-4">
           <div class="card-header">
             <h6 class="mb-0">
               <i class="fas fa-chart-bar me-2"></i>
-              Strategy Performance
+              Performance
             </h6>
           </div>
           <div class="card-body">
             <div class="d-flex justify-content-between mb-2">
-              <span>Message Open Rate:</span>
-              <span class="profit-indicator">87.3%</span>
+              <span>Open Rate:</span>
+              <span class="text-accent fw-bold">87.3%</span>
             </div>
             <div class="d-flex justify-content-between mb-2">
-              <span>Telegram Click Rate:</span>
-              <span class="profit-indicator">23.1%</span>
+              <span>Click Rate:</span>
+              <span class="text-accent fw-bold">23.1%</span>
             </div>
             <div class="d-flex justify-content-between mb-2">
-              <span>Conversion Rate:</span>
-              <span class="profit-indicator">12.7%</span>
+              <span>Conversion:</span>
+              <span class="text-accent fw-bold">12.7%</span>
             </div>
             <div class="d-flex justify-content-between">
-              <span>Risk Level:</span>
-              <span class="risk-indicator">LOW</span>
+              <span>Risk:</span>
+              <span class="text-success fw-bold">LOW</span>
             </div>
           </div>
         </div>
 
-        <!-- Broadcast History -->
-        <div class="card strategy-card shadow-sm">
+        <!-- History -->
+        <div class="card">
           <div class="card-header">
             <h6 class="mb-0">
               <i class="fas fa-history me-2"></i>
-              Recent Strategy Broadcasts
+              Recent
             </h6>
           </div>
           <div class="card-body">
             <div id="broadcastHistory">
-              <!-- Broadcast history will be loaded here -->
+              <!-- History will be loaded here -->
             </div>
           </div>
         </div>
@@ -541,17 +678,14 @@
       }
 
       bindEvents() {
-        // Contact form submission
         $('#contactForm').on('submit', (e) => {
           e.preventDefault();
           this.addContact();
         });
 
-        // Search and filter
         $('#searchContacts').on('input', () => this.filterContacts());
         $('#statusFilter').on('change', () => this.filterContacts());
 
-        // Broadcast controls
         $('#prepareBroadcast').on('click', () => this.prepareBroadcast());
         $('#sendBroadcast').on('click', () => this.sendBroadcast());
         $('#selectAllContacts').on('change', () => this.toggleSelectAll());
@@ -560,7 +694,6 @@
           this.telegramLink = e.target.value;
         });
 
-        // Pagination
         $(document).on('click', '.pagination .page-link', (e) => {
           e.preventDefault();
           const page = parseInt($(e.target).text());
@@ -576,7 +709,6 @@
           fullStrategy: `Hey! This is my real trading number. I'm a professional Forex trader with proven strategies that generate consistent profits. Please don't share this number with anyone else.\n\nReady to access my exclusive trading strategies? Join my private Telegram channel: ${this.telegramLink}`
         };
 
-        // Store templates for later use
         this.messageTemplates = templates;
       }
 
@@ -593,7 +725,7 @@
           this.displayContacts();
           this.updateStats();
         } catch (error) {
-          this.showToast('Error loading trading prospects', 'error');
+          this.showToast('Error loading contacts', 'error');
         } finally {
           this.showLoading(false);
         }
@@ -620,9 +752,9 @@
           $('#contactName').val('');
           $('#contactPhone').val('');
           this.loadContacts();
-          this.showToast('Trading prospect added successfully', 'success');
+          this.showToast('Contact added successfully', 'success');
         } catch (error) {
-          this.showToast('Error adding trading prospect', 'error');
+          this.showToast('Error adding contact', 'error');
         }
       }
 
@@ -638,7 +770,7 @@
               <div>
                 <strong>${contact.userName}</strong>
                 <br>
-                <small class="text-muted">${contact.phone}</small>
+                <small class="text-secondary">${contact.phone}</small>
               </div>
             </div>
             <div class="form-check">
@@ -705,7 +837,7 @@
               <div>
                 <strong>${contact.userName}</strong>
                 <br>
-                <small class="text-muted">${contact.phone}</small>
+                <small class="text-secondary">${contact.phone}</small>
               </div>
             </div>
             <div class="form-check">
@@ -740,12 +872,12 @@
         const message = $('#customMessage').val().trim();
 
         if (selectedContacts.length === 0) {
-          this.showToast('Please select at least one trading prospect', 'warning');
+          this.showToast('Please select contacts', 'warning');
           return;
         }
 
         if (!message) {
-          this.showToast('Please enter a strategy message', 'warning');
+          this.showToast('Please enter a message', 'warning');
           return;
         }
 
@@ -755,7 +887,7 @@
         }));
 
         $('#sendBroadcast').prop('disabled', false);
-        this.showToast(`Strategy broadcast prepared for ${selectedContacts.length} prospects`, 'success');
+        this.showToast(`Ready to send to ${selectedContacts.length} prospects`, 'success');
       }
 
       async sendBroadcast() {
@@ -766,20 +898,19 @@
           $('#sendBroadcast').prop('disabled', true);
           $('.loading-spinner').show();
 
-          // Create message first
           await $.ajax({
             url: this.API_ENDPOINTS.createMessage,
             type: 'GET'
           });
 
-          this.showToast('Strategy message created. Sending in 5 seconds...', 'info');
+          this.showToast('Message created. Sending in 5 seconds...', 'info');
           
           setTimeout(async () => {
             await this.sendMessages();
           }, 5000);
 
         } catch (error) {
-          this.showToast('Error preparing strategy broadcast', 'error');
+          this.showToast('Error preparing broadcast', 'error');
           this.isBroadcasting = false;
           $('#sendBroadcast').prop('disabled', false);
           $('.loading-spinner').hide();
@@ -793,12 +924,12 @@
             type: 'GET'
           });
 
-          this.showToast('Trading strategy messages sent successfully!', 'success');
+          this.showToast('Messages sent successfully!', 'success');
           this.updateStats();
           this.loadBroadcastHistory();
           
         } catch (error) {
-          this.showToast('Error sending strategy messages', 'error');
+          this.showToast('Error sending messages', 'error');
         } finally {
           this.isBroadcasting = false;
           $('#sendBroadcast').prop('disabled', true);
@@ -818,16 +949,16 @@
         const history = [
           { date: '2024-01-15', strategy: 'Real Number + Privacy', prospects: 45, status: 'completed' },
           { date: '2024-01-14', strategy: 'Telegram CTA', prospects: 32, status: 'completed' },
-          { date: '2024-01-13', strategy: 'Full Strategy Flow', prospects: 28, status: 'completed' }
+          { date: '2024-01-13', strategy: 'Complete Strategy', prospects: 28, status: 'completed' }
         ];
 
         const historyHtml = history.map(item => `
           <div class="d-flex justify-content-between align-items-center mb-2">
             <div>
-              <small class="text-muted">${item.date}</small>
+              <small class="text-secondary">${item.date}</small>
               <div class="small">${item.strategy}</div>
             </div>
-            <span class="badge bg-success">${item.prospects} prospects</span>
+            <span class="badge bg-success">${item.prospects}</span>
           </div>
         `).join('');
 
@@ -861,7 +992,7 @@
 
       showLoading(show) {
         if (show) {
-          $('#contactsList').html('<div class="text-center py-4"><div class="spinner-border text-warning" role="status"></div><p class="mt-2">Loading trading prospects...</p></div>');
+          $('#contactsList').html('<div class="text-center py-4"><div class="spinner-border text-accent" role="status"></div><p class="mt-2">Loading...</p></div>');
         }
       }
     }
