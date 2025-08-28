@@ -12,146 +12,271 @@
   <!-- Custom CSS -->
   <style>
     :root {
-      --primary-dark: #1a1a2e;
-      --secondary-dark: #16213e;
-      --accent-gold: #ffd700;
-      --accent-orange: #ff6b35;
-      --accent-red: #e74c3c;
-      --text-light: #f8f9fa;
-      --text-muted: #6c757d;
+      --black: #000000;
+      --white: #ffffff;
+      --gray-100: #f8f9fa;
+      --gray-200: #e9ecef;
+      --gray-300: #dee2e6;
+      --gray-400: #ced4da;
+      --gray-500: #adb5bd;
+      --gray-600: #6c757d;
+      --gray-700: #495057;
+      --gray-800: #343a40;
+      --gray-900: #212529;
+      --accent: #007bff;
+      --accent-hover: #0056b3;
+    }
+
+    * {
+      box-sizing: border-box;
     }
 
     body {
-      background: linear-gradient(135deg, var(--primary-dark) 0%, var(--secondary-dark) 100%);
-      color: var(--text-light);
+      background: var(--black);
+      color: var(--white);
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      line-height: 1.6;
+      margin: 0;
+      padding: 0;
     }
 
+    /* Navbar */
     .navbar {
-      background: linear-gradient(90deg, var(--primary-dark) 0%, var(--secondary-dark) 100%) !important;
-      border-bottom: 2px solid var(--accent-gold);
+      background: var(--black) !important;
+      border-bottom: 1px solid var(--gray-800);
     }
 
     .navbar-brand {
-      color: var(--accent-gold) !important;
-      font-weight: bold;
+      color: var(--white) !important;
+      font-weight: 700;
+      font-size: 1.3rem;
     }
 
+    /* Cards */
     .card {
-      background: rgba(255, 255, 255, 0.05);
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: var(--text-light);
+      background: var(--gray-900);
+      border: 1px solid var(--gray-800);
+      border-radius: 8px;
+      color: var(--white);
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      transition: all 0.2s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.4);
     }
 
     .card-header {
-      background: linear-gradient(135deg, var(--accent-orange) 0%, var(--accent-red) 100%) !important;
-      border-bottom: 2px solid var(--accent-gold);
+      background: var(--gray-800) !important;
+      border-bottom: 1px solid var(--gray-700);
+      color: var(--white);
+      font-weight: 600;
+      padding: 1rem;
     }
 
+    .card-body {
+      padding: 1.25rem;
+    }
+
+    /* Stats Cards */
     .stats-card {
-      background: linear-gradient(135deg, var(--accent-gold) 0%, var(--accent-orange) 100%);
-      color: var(--primary-dark);
-      border: 2px solid var(--accent-gold);
+      background: var(--gray-800);
+      color: var(--white);
+      border: 1px solid var(--gray-700);
+      text-align: center;
+      transition: all 0.2s ease;
     }
 
+    .stats-card:hover {
+      transform: translateY(-3px);
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+    }
+
+    .stats-card i {
+      font-size: 2rem;
+      margin-bottom: 0.75rem;
+      color: var(--accent);
+    }
+
+    .stats-card h4 {
+      font-size: 1.75rem;
+      font-weight: 700;
+      margin-bottom: 0.5rem;
+      color: var(--white);
+    }
+
+    .stats-card p {
+      font-weight: 500;
+      color: var(--gray-400);
+      margin: 0;
+    }
+
+    /* Broadcast Card */
     .broadcast-card {
-      background: linear-gradient(135deg, var(--accent-red) 0%, var(--accent-orange) 100%);
-      color: var(--text-light);
-      border: 2px solid var(--accent-gold);
+      background: var(--gray-900);
+      color: var(--white);
+      border: 1px solid var(--gray-700);
     }
 
+    /* Strategy Card */
     .strategy-card {
-      background: linear-gradient(135deg, var(--secondary-dark) 0%, var(--primary-dark) 100%);
-      border: 2px solid var(--accent-gold);
+      background: var(--gray-900);
+      border: 1px solid var(--gray-700);
+    }
+
+    /* Buttons */
+    .btn {
+      border-radius: 6px;
+      font-weight: 600;
+      padding: 0.6rem 1.2rem;
+      transition: all 0.2s ease;
+      border: none;
     }
 
     .btn-primary {
-      background: linear-gradient(45deg, var(--accent-gold), var(--accent-orange));
-      border: none;
-      color: var(--primary-dark);
-      font-weight: bold;
-      transition: all 0.3s ease;
+      background: var(--accent);
+      color: var(--white);
     }
 
     .btn-primary:hover {
-      transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(255, 215, 0, 0.3);
-      color: var(--primary-dark);
+      background: var(--accent-hover);
+      transform: translateY(-1px);
     }
 
     .btn-success {
-      background: linear-gradient(45deg, var(--accent-gold), #28a745);
-      border: none;
-      color: var(--primary-dark);
-      font-weight: bold;
+      background: #28a745;
+      color: var(--white);
     }
 
-    .btn-danger {
-      background: linear-gradient(45deg, var(--accent-red), var(--accent-orange));
-      border: none;
-      color: var(--text-light);
-      font-weight: bold;
+    .btn-success:hover {
+      background: #218838;
+      transform: translateY(-1px);
     }
 
-    .contact-item {
-      transition: all 0.3s ease;
-      border-left: 4px solid var(--accent-gold);
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .contact-item:hover {
-      transform: translateX(5px);
-      box-shadow: 0 4px 15px rgba(255, 215, 0, 0.2);
-      background: rgba(255, 255, 255, 0.08);
-    }
-
-    .status-indicator {
-      width: 12px;
-      height: 12px;
-      border-radius: 50%;
-      display: inline-block;
-      margin-right: 8px;
-    }
-
-    .status-online { background-color: var(--accent-gold); }
-    .status-offline { background-color: var(--accent-red); }
-    .status-pending { background-color: var(--accent-orange); }
-
+    /* Form Controls */
     .form-control, .form-select {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 215, 0, 0.3);
-      color: var(--text-light);
+      background: var(--gray-800);
+      border: 1px solid var(--gray-700);
+      border-radius: 6px;
+      color: var(--white);
+      padding: 0.6rem 0.8rem;
+      transition: all 0.2s ease;
     }
 
     .form-control:focus, .form-select:focus {
-      background: rgba(255, 255, 255, 0.15);
-      border-color: var(--accent-gold);
-      color: var(--text-light);
-      box-shadow: 0 0 0 0.2rem rgba(255, 215, 0, 0.25);
+      background: var(--gray-800);
+      border-color: var(--accent);
+      color: var(--white);
+      box-shadow: 0 0 0 0.2rem rgba(0, 123, 255, 0.25);
+      outline: none;
     }
 
     .form-control::placeholder {
-      color: rgba(255, 255, 255, 0.6);
+      color: var(--gray-500);
     }
 
+    .form-label {
+      font-weight: 600;
+      color: var(--gray-300);
+      margin-bottom: 0.5rem;
+    }
+
+    /* Contact Items */
+    .contact-item {
+      transition: all 0.2s ease;
+      border-left: 3px solid var(--accent);
+      background: var(--gray-800);
+      border-radius: 6px;
+      margin-bottom: 0.5rem;
+      padding: 0.75rem;
+    }
+
+    .contact-item:hover {
+      transform: translateX(3px);
+      background: var(--gray-700);
+    }
+
+    /* Status Indicators */
+    .status-indicator {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+    .status-online { background-color: #28a745; }
+    .status-offline { background-color: #dc3545; }
+    .status-pending { background-color: #ffc107; }
+
+    /* Pagination */
     .pagination .page-link {
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 215, 0, 0.3);
-      color: var(--accent-gold);
+      background: var(--gray-800);
+      border: 1px solid var(--gray-700);
+      color: var(--gray-300);
+      border-radius: 4px;
+      margin: 0 2px;
+      transition: all 0.2s ease;
     }
 
     .pagination .page-item.active .page-link {
-      background: var(--accent-gold);
-      border-color: var(--accent-gold);
-      color: var(--primary-dark);
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--white);
+      font-weight: 600;
     }
 
     .pagination .page-link:hover {
-      background: rgba(255, 215, 0, 0.2);
-      border-color: var(--accent-gold);
-      color: var(--accent-gold);
+      background: var(--gray-700);
+      border-color: var(--gray-600);
+      color: var(--white);
     }
 
+    /* Strategy Steps */
+    .strategy-step {
+      background: var(--gray-800);
+      border: 1px solid var(--gray-700);
+      border-radius: 8px;
+      padding: 1rem;
+      margin-bottom: 0.75rem;
+      transition: all 0.2s ease;
+    }
+
+    .strategy-step:hover {
+      transform: translateY(-2px);
+      background: var(--gray-700);
+    }
+
+    .strategy-step-number {
+      background: var(--accent);
+      color: var(--white);
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      margin-right: 12px;
+      font-size: 0.9rem;
+    }
+
+    /* Progress Bar */
+    .progress {
+      background: var(--gray-800);
+      border-radius: 6px;
+      height: 8px;
+      overflow: hidden;
+    }
+
+    .progress-bar {
+      background: var(--accent);
+      border-radius: 6px;
+      transition: width 0.3s ease;
+    }
+
+    /* Toast Container */
     .toast-container {
       position: fixed;
       top: 20px;
@@ -159,52 +284,78 @@
       z-index: 1050;
     }
 
-    .strategy-step {
-      background: rgba(255, 215, 0, 0.1);
-      border: 1px solid var(--accent-gold);
-      border-radius: 10px;
-      padding: 15px;
-      margin-bottom: 15px;
+    /* Utility Classes */
+    .text-accent {
+      color: var(--accent) !important;
     }
 
-    .strategy-step-number {
-      background: var(--accent-gold);
-      color: var(--primary-dark);
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      font-weight: bold;
-      margin-right: 10px;
+    .bg-dark {
+      background: var(--gray-900) !important;
     }
 
-    .telegram-link {
-      background: linear-gradient(45deg, #0088cc, #229ed9);
-      color: white;
-      padding: 10px 20px;
-      border-radius: 25px;
-      text-decoration: none;
-      display: inline-block;
-      font-weight: bold;
-      transition: all 0.3s ease;
+    .border-accent {
+      border: 1px solid var(--accent) !important;
     }
 
-    .telegram-link:hover {
+    .card.bg-dark {
+      background: var(--gray-900) !important;
+      border: 1px solid var(--gray-700);
+      transition: all 0.2s ease;
+    }
+
+    .card.bg-dark:hover {
+      background: var(--gray-800) !important;
       transform: translateY(-2px);
-      box-shadow: 0 8px 25px rgba(0, 136, 204, 0.4);
-      color: white;
     }
 
-    .profit-indicator {
-      color: var(--accent-gold);
-      font-weight: bold;
+    /* Responsive Design */
+    @media (max-width: 768px) {
+      .navbar-brand {
+        font-size: 1.1rem;
+      }
+      
+      .display-6 {
+        font-size: 1.75rem;
+      }
+      
+      .card-body {
+        padding: 1rem;
+      }
+      
+      .btn {
+        padding: 0.5rem 1rem;
+        font-size: 0.9rem;
+      }
+      
+      .stats-card h4 {
+        font-size: 1.5rem;
+      }
+      
+      .stats-card i {
+        font-size: 1.75rem;
+      }
     }
 
-    .risk-indicator {
-      color: var(--accent-red);
-      font-weight: bold;
+    @media (max-width: 576px) {
+      .container {
+        padding: 0 15px;
+      }
+      
+      .strategy-step {
+        padding: 0.75rem;
+      }
+      
+      .strategy-step-number {
+        width: 24px;
+        height: 24px;
+        font-size: 0.8rem;
+        margin-right: 10px;
+      }
+      
+      .btn {
+        width: 100%;
+        margin-bottom: 0.5rem;
+      }
     }
   </style>
 </head>
@@ -230,54 +381,189 @@
     <div class="row mb-4">
       <div class="col-12">
         <h1 class="display-6 text-center mb-3">
-          <i class="fas fa-chart-line text-warning me-3"></i>
+          <i class="fas fa-chart-line text-accent me-3"></i>
           PROFESSIONAL FOREX TRADING BROADCAST SYSTEM
         </h1>
-        <p class="text-center text-warning">Exclusive access to proven trading strategies and real-time market insights</p>
+        <p class="text-center text-muted mb-4">Exclusive access to proven trading strategies and real-time market insights</p>
+        
+        <!-- Quick Start Guide -->
+        <div class="row justify-content-center">
+          <div class="col-lg-8">
+            <div class="alert alert-info bg-dark border-accent">
+              <div class="d-flex align-items-center">
+                <i class="fas fa-info-circle fa-2x text-accent me-3"></i>
+                <div>
+                  <h6 class="mb-1">🚀 Quick Start Guide</h6>
+                  <p class="mb-0 small">1. Add trading prospects → 2. Select your strategy → 3. Send broadcast → 4. AI analyzes responses → 5. Convert to Telegram subscribers</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <!-- Strategy Overview -->
+    <!-- AI-Powered Strategy Flow -->
     <div class="row mb-4">
       <div class="col-12">
         <div class="card strategy-card">
           <div class="card-header">
             <h5 class="mb-0">
-              <i class="fas fa-chess-king me-2"></i>
-              TRADING STRATEGY FLOW
+              <i class="fas fa-robot me-2"></i>
+              AI-POWERED TRADING STRATEGY FLOW
             </h5>
           </div>
           <div class="card-body">
+            <!-- Strategy Flow Explanation -->
+            <div class="row mb-4">
+              <div class="col-12">
+                <div class="alert alert-info bg-dark border-accent">
+                  <h6 class="text-accent mb-2">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    How This Strategy Works
+                  </h6>
+                  <p class="mb-2">This is a proven 4-step process that uses psychological triggers and AI automation to convert prospects into Telegram subscribers:</p>
+                  <ul class="mb-0 small">
+                    <li><strong>Authenticity:</strong> Sharing your real number builds trust and credibility</li>
+                    <li><strong>Exclusivity:</strong> Privacy request creates FOMO and makes prospects feel special</li>
+                    <li><strong>Intelligence:</strong> AI analyzes responses to identify high-value prospects</li>
+                    <li><strong>Conversion:</strong> Personalized follow-up increases Telegram subscription rates</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+
             <div class="row">
-              <div class="col-md-4">
+              <div class="col-lg-3 col-md-6 mb-3">
                 <div class="strategy-step">
                   <div class="d-flex align-items-center">
                     <span class="strategy-step-number">1</span>
                     <div>
-                      <h6 class="mb-1">Share Real Number</h6>
-                      <small class="text-muted">Provide your authentic contact</small>
+                      <h6 class="mb-1">Initial Contact</h6>
+                      <small class="text-muted">Share your real number + establish authenticity</small>
+                      <div class="mt-2">
+                        <small class="text-accent">
+                          <i class="fas fa-check-circle me-1"></i>
+                          Builds trust and credibility
+                        </small>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-lg-3 col-md-6 mb-3">
                 <div class="strategy-step">
                   <div class="d-flex align-items-center">
                     <span class="strategy-step-number">2</span>
                     <div>
                       <h6 class="mb-1">Privacy Request</h6>
-                      <small class="text-muted">"Please don't share this number"</small>
+                      <small class="text-muted">"Please don't share this number" - creates exclusivity</small>
+                      <div class="mt-2">
+                        <small class="text-accent">
+                          <i class="fas fa-check-circle me-1"></i>
+                          Creates FOMO and exclusivity
+                        </small>
+                      </div>
                     </div>
                   </div>
                 </div>
               </div>
-              <div class="col-md-4">
+              <div class="col-lg-3 col-md-6 mb-3">
                 <div class="strategy-step">
                   <div class="d-flex align-items-center">
                     <span class="strategy-step-number">3</span>
                     <div>
-                      <h6 class="mb-1">Telegram Link</h6>
-                      <small class="text-muted">Main call-to-action</small>
+                      <h6 class="mb-1">AI Response Analysis</h6>
+                      <small class="text-muted">AI catches and categorizes responses automatically</small>
+                      <div class="mt-2">
+                        <small class="text-accent">
+                          <i class="fas fa-check-circle me-1"></i>
+                          Identifies high-value prospects
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+              <div class="col-lg-3 col-md-6 mb-3">
+                <div class="strategy-step">
+                  <div class="d-flex align-items-center">
+                    <span class="strategy-step-number">4</span>
+                    <div>
+                      <h6 class="mb-1">Telegram Conversion</h6>
+                      <small class="text-muted">Send personalized Telegram link based on AI analysis</small>
+                      <div class="mt-2">
+                        <small class="text-accent">
+                          <i class="fas fa-check-circle me-1"></i>
+                          Personalized follow-up increases conversion
+                        </small>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+            
+            <!-- AI Flow Purposes -->
+            <div class="row mt-4">
+              <div class="col-12">
+                <h6 class="text-accent mb-3">
+                  <i class="fas fa-brain me-2"></i>
+                  AI FLOW PURPOSES & BENEFITS
+                </h6>
+                <div class="row">
+                  <div class="col-md-4 mb-3">
+                    <div class="card bg-dark border-accent">
+                      <div class="card-body text-center">
+                        <i class="fas fa-bullseye fa-2x text-accent mb-2"></i>
+                        <h6 class="text-white">🎯 Purpose #1: Telegram Conversion</h6>
+                        <small class="text-muted mb-2 d-block">Primary goal - convert prospects to Telegram subscribers</small>
+                        <div class="text-start small">
+                          <strong>Benefits:</strong>
+                          <ul class="mb-0 mt-1">
+                            <li>Direct access to prospects</li>
+                            <li>Higher engagement rates</li>
+                            <li>Easier content distribution</li>
+                            <li>Better conversion tracking</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <div class="card bg-dark border-accent">
+                      <div class="card-body text-center">
+                        <i class="fas fa-chart-line fa-2x text-accent mb-2"></i>
+                        <h6 class="text-white">📊 Purpose #2: Response Segmentation</h6>
+                        <small class="text-muted mb-2 d-block">AI categorizes prospects by interest level and response type</small>
+                        <div class="text-start small">
+                          <strong>Benefits:</strong>
+                          <ul class="mb-0 mt-1">
+                            <li>Identify hot leads quickly</li>
+                            <li>Segment by interest level</li>
+                            <li>Prioritize follow-up efforts</li>
+                            <li>Improve response rates</li>
+                          </ul>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="col-md-4 mb-3">
+                    <div class="card bg-dark border-accent">
+                      <div class="card-body text-center">
+                        <i class="fas fa-users fa-2x text-accent mb-2"></i>
+                        <h6 class="text-white">👥 Purpose #3: Lead Qualification</h6>
+                        <small class="text-muted mb-2 d-block">Automatically qualify leads based on engagement patterns</small>
+                        <div class="text-start small">
+                          <strong>Benefits:</strong>
+                          <ul class="mb-0 mt-1">
+                            <li>Focus on quality prospects</li>
+                            <li>Reduce time on cold leads</li>
+                            <li>Increase conversion efficiency</li>
+                            <li>Better ROI on marketing</li>
+                          </ul>
+                        </div>
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -340,19 +626,42 @@
             </h5>
           </div>
           <div class="card-body">
+            <!-- Contact Form Instructions -->
+            <div class="alert alert-info bg-dark border-accent mb-3">
+              <h6 class="text-accent mb-2">
+                <i class="fas fa-lightbulb me-2"></i>
+                Building Your Prospect List
+              </h6>
+              <p class="mb-2 small">Quality prospects are the foundation of successful broadcasts:</p>
+              <ul class="mb-0 small">
+                <li><strong>Target traders</strong> who are actively seeking strategies</li>
+                <li><strong>Use real names</strong> for personalized messaging</li>
+                <li><strong>Verify phone numbers</strong> to ensure delivery</li>
+                <li><strong>Segment by interest</strong> for better targeting</li>
+              </ul>
+            </div>
+            
             <form id="contactForm" class="row g-3">
               <div class="col-md-5">
-                <label for="contactName" class="form-label">Full Name</label>
-                <input type="text" class="form-control" id="contactName" placeholder="Enter full name" required>
+                <label for="contactName" class="form-label">
+                  <i class="fas fa-user me-1"></i>
+                  Full Name
+                </label>
+                <input type="text" class="form-control" id="contactName" placeholder="Enter full name (e.g., John Smith)" required>
+                <small class="text-muted">Use real names for better personalization</small>
               </div>
               <div class="col-md-5">
-                <label for="contactPhone" class="form-label">Phone Number</label>
+                <label for="contactPhone" class="form-label">
+                  <i class="fas fa-phone me-1"></i>
+                  Phone Number
+                </label>
                 <input type="tel" class="form-control" id="contactPhone" placeholder="+1234567890" required>
+                <small class="text-muted">Include country code for international prospects</small>
               </div>
               <div class="col-md-2 d-grid">
                 <button type="submit" class="btn btn-primary">
                   <i class="fas fa-plus me-1"></i>
-                  Add
+                  Add Prospect
                 </button>
               </div>
             </form>
@@ -368,17 +677,43 @@
                 Trading Prospects List
               </h5>
               <div class="d-flex gap-2">
-                <input type="text" class="form-control form-control-sm" id="searchContacts" placeholder="Search prospects...">
+                <input type="text" class="form-control form-control-sm" id="searchContacts" placeholder="🔍 Search prospects by name or phone...">
                 <select class="form-select form-select-sm" id="statusFilter">
-                  <option value="">All Status</option>
-                  <option value="online">Online</option>
-                  <option value="offline">Offline</option>
-                  <option value="pending">Pending</option>
+                  <option value="">📊 All Status</option>
+                  <option value="online">🟢 Online (Active now)</option>
+                  <option value="offline">🔴 Offline (Last seen >1 hour)</option>
+                  <option value="pending">🟡 Pending (No recent activity)</option>
                 </select>
               </div>
             </div>
           </div>
           <div class="card-body">
+            <!-- List Management Tips -->
+            <div class="alert alert-info bg-dark border-accent mb-3">
+              <h6 class="text-accent mb-2">
+                <i class="fas fa-tips me-2"></i>
+                Managing Your Prospects
+              </h6>
+              <div class="row">
+                <div class="col-md-6">
+                  <strong>Search & Filter:</strong>
+                  <ul class="mb-0 small">
+                    <li>Use search to find specific prospects quickly</li>
+                    <li>Filter by status to target active users</li>
+                    <li>Combine filters for precise targeting</li>
+                  </ul>
+                </div>
+                <div class="col-md-6">
+                  <strong>Selection Tips:</strong>
+                  <ul class="mb-0 small">
+                    <li>Select prospects based on engagement level</li>
+                    <li>Use "Select All" for mass broadcasts</li>
+                    <li>Target online prospects for immediate responses</li>
+                  </ul>
+                </div>
+              </div>
+            </div>
+            
             <div id="contactsList" class="list-group">
               <!-- Contacts will be loaded here -->
             </div>
@@ -400,61 +735,98 @@
               FOREX STRATEGY BROADCAST
             </h5>
             
+            <!-- Broadcast Instructions -->
+            <div class="alert alert-info bg-dark border-accent mb-3">
+              <h6 class="text-accent mb-2">
+                <i class="fas fa-info-circle me-2"></i>
+                Broadcast Instructions
+              </h6>
+              <p class="mb-2 small">Follow these steps to create an effective broadcast:</p>
+              <ol class="mb-0 small">
+                <li><strong>Choose Template:</strong> Select a pre-built strategy or create custom</li>
+                <li><strong>Customize Message:</strong> Personalize the content for your audience</li>
+                <li><strong>Set Telegram Link:</strong> Your main conversion destination</li>
+                <li><strong>Select Audience:</strong> Target specific prospect segments</li>
+                <li><strong>Prepare & Send:</strong> Review and execute your campaign</li>
+              </ol>
+            </div>
+            
             <div class="mb-3">
-              <label for="messageTemplate" class="form-label">Strategy Template</label>
+              <label for="messageTemplate" class="form-label">
+                <i class="fas fa-file-alt me-1"></i>
+                Strategy Template
+              </label>
               <select class="form-select" id="messageTemplate">
-                <option value="">Select a strategy</option>
-                <option value="realNumber">Real Number Strategy</option>
-                <option value="privacyRequest">Privacy Request</option>
-                <option value="telegramCTA">Telegram Call-to-Action</option>
-                <option value="fullStrategy">Complete Strategy Flow</option>
-                <option value="custom">Custom Message</option>
+                <option value="">Select a strategy template</option>
+                <option value="realNumber">📱 Real Number Strategy - Build trust with authenticity</option>
+                <option value="privacyRequest">🔒 Privacy Request - Create exclusivity and FOMO</option>
+                <option value="telegramCTA">📢 Telegram Call-to-Action - Direct conversion approach</option>
+                <option value="fullStrategy">🚀 Complete Strategy Flow - All 4 steps combined</option>
+                <option value="custom">✏️ Custom Message - Create your own strategy</option>
               </select>
+              <small class="text-muted">Each template is designed to maximize conversion rates</small>
             </div>
 
             <div class="mb-3">
-              <label for="customMessage" class="form-label">Custom Strategy Message</label>
-              <textarea class="form-control" id="customMessage" rows="4" placeholder="Type your trading strategy message here..."></textarea>
+              <label for="customMessage" class="form-label">
+                <i class="fas fa-edit me-1"></i>
+                Custom Strategy Message
+              </label>
+              <textarea class="form-control" id="customMessage" rows="4" placeholder="Type your trading strategy message here...&#10;&#10;💡 Tips:&#10;- Start with authenticity (real number)&#10;- Add privacy request for exclusivity&#10;- Include clear Telegram call-to-action&#10;- Keep it conversational and personal"></textarea>
+              <small class="text-muted">Use emojis and personal touches to increase engagement</small>
             </div>
 
             <div class="mb-3">
-              <label for="telegramLink" class="form-label">Telegram Link</label>
+              <label for="telegramLink" class="form-label">
+                <i class="fab fa-telegram me-1"></i>
+                Telegram Channel Link
+              </label>
               <input type="url" class="form-control" id="telegramLink" placeholder="https://t.me/yourchannel" value="https://t.me/forexmasterpro">
+              <small class="text-muted">This is your main conversion destination - make sure it's active and engaging</small>
             </div>
 
             <div class="mb-3">
-              <label class="form-label">Target Audience</label>
+              <label class="form-label">
+                <i class="fas fa-users me-1"></i>
+                Target Audience Selection
+              </label>
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="selectAllContacts">
                 <label class="form-check-label" for="selectAllContacts">
-                  All Trading Prospects
+                  <strong>All Trading Prospects</strong>
+                  <small class="text-muted d-block">Send to your entire contact list</small>
                 </label>
               </div>
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="onlineContactsOnly">
                 <label class="form-check-label" for="onlineContactsOnly">
-                  Online Prospects Only
+                  <strong>Online Prospects Only</strong>
+                  <small class="text-muted d-block">Target active users for higher response rates</small>
                 </label>
               </div>
+              <small class="text-muted">💡 Pro tip: Start with a small test group before full broadcast</small>
             </div>
 
             <div class="d-grid gap-2">
               <button class="btn btn-primary" id="prepareBroadcast">
                 <i class="fas fa-cog me-1"></i>
-                Prepare Strategy Broadcast
+                🔧 Prepare Strategy Broadcast
               </button>
               <button class="btn btn-success" id="sendBroadcast" disabled>
                 <i class="fas fa-paper-plane me-1"></i>
-                Send Strategy Messages
+                📤 Send Strategy Messages
                 <span class="loading-spinner spinner-border spinner-border-sm ms-2"></span>
               </button>
             </div>
 
             <div class="mt-3">
               <div class="progress" style="height: 8px;">
-                <div class="progress-bar bg-warning" id="broadcastProgress" role="progressbar" style="width: 0%"></div>
+                <div class="progress-bar" id="broadcastProgress" role="progressbar" style="width: 0%"></div>
               </div>
-              <small class="text-warning" id="progressText">Ready to broadcast trading strategy</small>
+              <small class="text-muted" id="progressText">
+                <i class="fas fa-clock me-1"></i>
+                Ready to broadcast trading strategy
+              </small>
             </div>
           </div>
         </div>
@@ -464,25 +836,72 @@
           <div class="card-header">
             <h6 class="mb-0">
               <i class="fas fa-chart-bar me-2"></i>
-              Strategy Performance
+              Strategy Performance Metrics
             </h6>
           </div>
           <div class="card-body">
-            <div class="d-flex justify-content-between mb-2">
-              <span>Message Open Rate:</span>
-              <span class="profit-indicator">87.3%</span>
+            <!-- Performance Explanation -->
+            <div class="alert alert-info bg-dark border-accent mb-3">
+              <h6 class="text-accent mb-2">
+                <i class="fas fa-chart-line me-2"></i>
+                Understanding Your Metrics
+              </h6>
+              <p class="mb-2 small">These metrics help you optimize your broadcast strategy:</p>
+              <ul class="mb-0 small">
+                <li><strong>Open Rate:</strong> How many prospects read your message</li>
+                <li><strong>Click Rate:</strong> How many visit your Telegram channel</li>
+                <li><strong>Conversion Rate:</strong> How many become subscribers</li>
+                <li><strong>Risk Level:</strong> Overall campaign effectiveness score</li>
+              </ul>
             </div>
-            <div class="d-flex justify-content-between mb-2">
-              <span>Telegram Click Rate:</span>
-              <span class="profit-indicator">23.1%</span>
+            
+            <div class="d-flex justify-content-between mb-3">
+              <span>
+                <i class="fas fa-eye me-1"></i>
+                Message Open Rate:
+              </span>
+              <span class="text-accent fw-bold">87.3%</span>
             </div>
-            <div class="d-flex justify-content-between mb-2">
-              <span>Conversion Rate:</span>
-              <span class="profit-indicator">12.7%</span>
+            <div class="d-flex justify-content-between mb-3">
+              <span>
+                <i class="fab fa-telegram me-1"></i>
+                Telegram Click Rate:
+              </span>
+              <span class="text-accent fw-bold">23.1%</span>
+            </div>
+            <div class="d-flex justify-content-between mb-3">
+              <span>
+                <i class="fas fa-user-check me-1"></i>
+                Conversion Rate:
+              </span>
+              <span class="text-accent fw-bold">12.7%</span>
             </div>
             <div class="d-flex justify-content-between">
-              <span>Risk Level:</span>
-              <span class="risk-indicator">LOW</span>
+              <span>
+                <i class="fas fa-shield-alt me-1"></i>
+                Risk Level:
+              </span>
+              <span class="text-success fw-bold">LOW</span>
+            </div>
+            
+            <!-- Performance Tips -->
+            <div class="mt-3 pt-3 border-top border-secondary">
+              <h6 class="text-accent mb-2">
+                <i class="fas fa-lightbulb me-2"></i>
+                Performance Tips
+              </h6>
+              <div class="row">
+                <div class="col-6">
+                  <small class="text-muted">
+                    <strong>High Open Rate:</strong> Your message content is engaging
+                  </small>
+                </div>
+                <div class="col-6">
+                  <small class="text-muted">
+                    <strong>Low Click Rate:</strong> Improve your Telegram CTA
+                  </small>
+                </div>
+              </div>
             </div>
           </div>
         </div>
