@@ -114,17 +114,22 @@
             </div>
 
             <div class="mb-3">
-              <label for="customMessage" class="form-label fw-bold">Step 2: Generate AI Messages</label>
-              <textarea class="form-control" id="customMessage" rows="6" placeholder="AI-generated personalized messages will appear here..."></textarea>
+              <label for="customMessage" class="form-label fw-bold">Message</label>
+              <textarea class="form-control" id="customMessage" rows="6" placeholder="Enter your message here..."></textarea>
               <div class="mt-2 d-flex gap-2">
-                <button class="btn btn-primary btn-sm" id="sendMessageBtn">
-                  <i class="fas fa-magic me-1"></i>
+                <button class="btn btn-outline-secondary btn-sm" id="insertTemplateBtn">
+                  <!-- <i class="fas fa-cog me-1"></i> -->
+                  Are you sure?
+                </button>
+                <button class="btn btn-outline-primary btn-sm" id="sendMessageBtn">
+                  <i class="fas fa-paper-plane me-1"></i>
                   Generate Template
+                  <!-- Send Message -->
                 </button>
               </div>
               <small class="text-muted mt-2 d-block">
                 <i class="fas fa-info-circle me-1"></i>
-                AI will create unique messages for each user based on the selected template
+                Messages will be sent to the webhook endpoint
               </small>
             </div>
 
