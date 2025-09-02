@@ -48,34 +48,7 @@
     <!-- Main Content -->
     <div class="row">
       <div class="col-lg-8">
-        <!-- Add Contact Form -->
-        <div class="card mb-4">
-          <div class="card-header">
-            <h5 class="mb-0">
-              <i class="fas fa-user-plus me-2"></i>
-              Add Prospect
-            </h5>
-          </div>
-          <div class="card-body">
-            <form id="contactForm" class="row g-3">
-              <div class="col-md-5">
-                <label for="contactName" class="form-label">Name</label>
-                <input type="text" class="form-control" id="contactName" placeholder="Full name" required>
-              </div>
-              <div class="col-md-5">
-                <label for="contactPhone" class="form-label">Phone</label>
-                <input type="tel" class="form-control" id="contactPhone" placeholder="+1234567890" required>
-              </div>
-              <div class="col-md-2 d-grid">
-                <button type="submit" class="btn btn-primary">
-                  <i class="fas fa-plus me-1"></i>
-                  Add
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
+        
         <!-- Contacts List -->
         <div class="card">
           <div class="card-header">
@@ -120,7 +93,8 @@
           <div class="card-body">
             <!-- Template Selection -->
             <div class="mb-4">
-              <label class="form-label fw-bold">Choose Template</label>
+              <label class="form-label fw-bold">Step 1: Choose Template</label>
+              <small class="text-muted d-block mb-3">Select a template to generate personalized AI messages for each user</small>
               <div class="template-option" data-template="realNumber">
                 <h6><i class="fas fa-shield-alt me-2 text-accent"></i>Real Number</h6>
                 <p>Establish authenticity with your real trading number</p>
@@ -140,22 +114,17 @@
             </div>
 
             <div class="mb-3">
-              <label for="customMessage" class="form-label fw-bold">Message</label>
-              <textarea class="form-control" id="customMessage" rows="6" placeholder="Enter your message here..."></textarea>
+              <label for="customMessage" class="form-label fw-bold">Step 2: Generate AI Messages</label>
+              <textarea class="form-control" id="customMessage" rows="6" placeholder="AI-generated personalized messages will appear here..."></textarea>
               <div class="mt-2 d-flex gap-2">
-                <button class="btn btn-outline-secondary btn-sm" id="insertTemplateBtn">
-                  <!-- <i class="fas fa-cog me-1"></i> -->
-                  Are you sure?
-                </button>
-                <button class="btn btn-outline-primary btn-sm" id="sendMessageBtn">
-                  <i class="fas fa-paper-plane me-1"></i>
+                <button class="btn btn-primary btn-sm" id="sendMessageBtn">
+                  <i class="fas fa-magic me-1"></i>
                   Generate Template
-                  <!-- Send Message -->
                 </button>
               </div>
               <small class="text-muted mt-2 d-block">
                 <i class="fas fa-info-circle me-1"></i>
-                Messages will be sent to the webhook endpoint
+                AI will create unique messages for each user based on the selected template
               </small>
             </div>
 
@@ -166,7 +135,7 @@
             </div>
 
             <div class="mb-3">
-              <label class="form-label fw-bold">Recipients</label>
+              <label class="form-label fw-bold">Step 3: Select Recipients</label>
               <div class="form-check">
                 <input class="form-check-input" type="checkbox" id="selectAllContacts">
                 <label class="form-check-label" for="selectAllContacts">
@@ -182,10 +151,6 @@
             </div>
 
             <div class="d-grid gap-2">
-              <button class="btn btn-primary" id="prepareBroadcast">
-                <i class="fas fa-cog me-1"></i>
-                Prepare Broadcast
-              </button>
               <button class="btn btn-success" id="sendBroadcast" disabled>
                 <i class="fas fa-paper-plane me-1"></i>
                 Send Broadcast

@@ -20,6 +20,7 @@ class BroadcastManager {
   init() {
     this.loadMessageTemplates();
     this.bindEvents();
+    this.enableGenerateTemplateButton();
   }
 
   /**
@@ -55,7 +56,6 @@ class BroadcastManager {
   loadMessageTemplate() {
     if (this.selectedTemplate && this.messageTemplates[this.selectedTemplate]) {
       $('#customMessage').val(this.messageTemplates[this.selectedTemplate]);
-      this.updateSendButtonState();
     }
   }
 
@@ -69,53 +69,88 @@ class BroadcastManager {
   }
 
   /**
-   * Prepare broadcast by validating message
+   * Enable the Generate Template button by default
    */
-  prepareBroadcast() {
-    const message = $('#customMessage').val().trim();
-
-    if (!message) {
-      this.uiUtils.showToast('Please select a template or enter a custom message first', 'warning');
-      return;
-    }
-
-    $('#sendBroadcast').prop('disabled', false);
-    this.uiUtils.showToast('Ready to send message', 'success');
-  }
-
-  /**
-   * Insert a template (placeholder functionality)
-   */
-  insertTemplate() {
-    // Enable send button since we now have text
+  enableGenerateTemplateButton() {
     $('#sendMessageBtn').prop('disabled', false);
-    this.uiUtils.showToast('Template inserted successfully', 'success');
   }
 
   /**
-   * Send individual message
+   * Generate AI template for each user (simulated)
    */
-  async sendIndividualMessage() {
-    const message = $('#customMessage').val().trim();
+  async generateTemplate() {
+    const selectedTemplate = this.selectedTemplate;
     
-    if (!message) {
-      this.uiUtils.showToast('Please enter a message first', 'warning');
+    if (!selectedTemplate) {
+      this.uiUtils.showToast('Please select a template first', 'warning');
       return;
     }
 
     try {
-      $('#sendMessageBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>Sending...');
+      // Disable button and show loading
+      $('#sendMessageBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>Generating...');
       
-      await this.apiService.createMessage(message);
+      // Simulate AI generation time (2-3 seconds)
+      await new Promise(resolve => setTimeout(resolve, 2500));
       
-      this.uiUtils.showToast('Message sent successfully!', 'success');
+      // Generate unique message for each user
+      const baseMessage = this.messageTemplates[selectedTemplate];
+      const personalizedMessage = this.personalizeMessage(baseMessage);
+      
+      $('#customMessage').val(personalizedMessage);
+      
+      // Enable send broadcast button after 5 seconds
+      this.startBroadcastDelay();
+      
+      this.uiUtils.showToast('Template generated successfully!', 'success');
       
     } catch (error) {
-      this.uiUtils.showToast('Error sending message: ' + error.message, 'error');
+      this.uiUtils.showToast('Error generating template: ' + error.message, 'error');
     } finally {
-      $('#sendMessageBtn').prop('disabled', false).html('<i class="fas fa-paper-plane me-1"></i>Send Message');
+      $('#sendMessageBtn').prop('disabled', false).html('<i class="fas fa-magic me-1"></i>Generate Template');
     }
   }
+
+  /**
+   * Personalize message for each user (simulated AI personalization)
+   */
+  personalizeMessage(baseMessage) {
+    // Add some personalization elements
+    const personalizations = [
+      'Hey there!',
+      'Hi!',
+      'Hello!',
+      'Greetings!'
+    ];
+    
+    const randomGreeting = personalizations[Math.floor(Math.random() * personalizations.length)];
+    return `${randomGreeting}\n\n${baseMessage}`;
+  }
+
+  /**
+   * Start the 5-second delay before enabling Send Broadcast
+   */
+  startBroadcastDelay() {
+    $('#sendBroadcast').prop('disabled', true);
+    $('#progressText').text('Generating AI messages... Please wait 5 seconds');
+    
+    let countdown = 5;
+    const countdownInterval = setInterval(() => {
+      $('#progressText').text(`Generating AI messages... ${countdown} seconds remaining`);
+      countdown--;
+      
+      if (countdown < 0) {
+        clearInterval(countdownInterval);
+        $('#sendBroadcast').prop('disabled', false);
+        $('#progressText').text('Ready to send broadcast');
+        this.uiUtils.showToast('Broadcast ready to send!', 'success');
+      }
+    }, 1000);
+  }
+
+
+
+
 
   /**
    * Send broadcast to all selected contacts
@@ -148,13 +183,7 @@ class BroadcastManager {
     }
   }
 
-  /**
-   * Update send button state based on message content
-   */
-  updateSendButtonState() {
-    const hasText = $('#customMessage').val().trim().length > 0;
-    $('#sendMessageBtn').prop('disabled', !hasText);
-  }
+
 
   /**
    * Update telegram link
@@ -169,18 +198,11 @@ class BroadcastManager {
    * Bind event listeners
    */
   bindEvents() {
-    $('#prepareBroadcast').on('click', () => this.prepareBroadcast());
     $('#sendBroadcast').on('click', () => this.sendBroadcast());
-    $('#sendMessageBtn').on('click', () => this.sendIndividualMessage());
-    $('#insertTemplateBtn').on('click', () => this.insertTemplate());
+    $('#sendMessageBtn').on('click', () => this.generateTemplate());
 
     $('#telegramLink').on('input', (e) => {
       this.updateTelegramLink(e.target.value);
-    });
-
-    // Allow manual typing in the message textarea
-    $('#customMessage').on('input', () => {
-      this.updateSendButtonState();
     });
 
     // Template selection
