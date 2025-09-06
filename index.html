@@ -31,58 +31,6 @@
   </nav>
 
   <div class="container py-4">
-    <!-- Header -->
-    <div class="row mb-4">
-      <div class="col-12">
-        <h1 class="display-6 text-center mb-3">
-          <i class="fas fa-chart-line text-accent me-3"></i>
-          FOREX BROADCAST SYSTEM
-        </h1>
-        <p class="text-center text-secondary">Professional trading strategy broadcasts</p>
-      </div>
-    </div>
-
-
-    <!-- Statistics -->
-    <div class="row mb-4">
-      <div class="col-md-3 mb-3">
-        <div class="card stats-card h-100">
-          <div class="card-body text-center">
-            <i class="fas fa-users mb-2"></i>
-            <h4 id="totalContacts">0</h4>
-            <p class="mb-0">Prospects</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mb-3">
-        <div class="card stats-card h-100">
-          <div class="card-body text-center">
-            <i class="fas fa-paper-plane mb-2"></i>
-            <h4 id="sentMessages">0</h4>
-            <p class="mb-0">Messages</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mb-3">
-        <div class="card stats-card h-100">
-          <div class="card-body text-center">
-            <i class="fas fa-chart-line mb-2"></i>
-            <h4 id="conversionRate">0%</h4>
-            <p class="mb-0">Conversion</p>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-3 mb-3">
-        <div class="card stats-card h-100">
-          <div class="card-body text-center">
-            <i class="fas fa-telegram mb-2"></i>
-            <h4 id="telegramClicks">0</h4>
-            <p class="mb-0">Clicks</p>
-          </div>
-        </div>
-      </div>
-    </div>
-
     <!-- Main Content -->
     <div class="row">
       <div class="col-lg-8">
@@ -102,11 +50,11 @@
               </div>
               <div class="col-md-5">
                 <label for="contactPhone" class="form-label">Phone</label>
-                <input type="tel" class="form-control" id="contactPhone" placeholder="+1234567890" required>
+                <input type="tel" class="form-control" id="contactPhone" placeholder="1234567890" required>
+                <span class="text-muted">Dont add + in the phone number</span>
               </div>
               <div class="col-md-2 d-grid">
                 <button type="submit" class="btn btn-primary">
-                  <i class="fas fa-plus me-1"></i>
                   Add
                 </button>
               </div>
@@ -222,12 +170,12 @@
             <div class="d-grid gap-2">
               <button class="btn btn-primary" id="prepareBroadcast">
                 <i class="fas fa-cog me-1"></i>
-                Prepare Broadcast
+                Messages templates Complete
               </button>
               <button class="btn btn-success" id="sendBroadcast" disabled>
                 <i class="fas fa-paper-plane me-1"></i>
                 Send Broadcast
-                <span class="loading-spinner spinner-border spinner-border-sm ms-2"></span>
+                <!-- <span class="loading-spinner spinner-border spinner-border-sm ms-2"></span> -->
               </button>
             </div>
 
@@ -241,6 +189,47 @@
         </div>
       </div>
     </div>
+
+        <!-- Statistics -->
+        <div class="row mb-4">
+          <div class="col-md-3 mb-3">
+            <div class="card stats-card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-users mb-2"></i>
+                <h4 id="totalContacts">0</h4>
+                <p class="mb-0">Prospects</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card stats-card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-paper-plane mb-2"></i>
+                <h4 id="sentMessages">0</h4>
+                <p class="mb-0">Messages</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card stats-card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-chart-line mb-2"></i>
+                <h4 id="conversionRate">0%</h4>
+                <p class="mb-0">Conversion</p>
+              </div>
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <div class="card stats-card h-100">
+              <div class="card-body text-center">
+                <i class="fas fa-telegram mb-2"></i>
+                <h4 id="telegramClicks">0</h4>
+                <p class="mb-0">Clicks</p>
+              </div>
+            </div>
+          </div>
+        </div>
+    
   </div>
 
   <!-- Toast Container -->
