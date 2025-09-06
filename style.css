@@ -364,14 +364,299 @@ body {
   border: 2px solid var(--accent) !important;
 }
 
+/* Template Buttons */
+.template-btn {
+  transition: all 0.3s ease;
+  border: 2px solid var(--border);
+  font-weight: 500;
+}
+
+.template-btn:hover {
+  border-color: var(--accent);
+  background: var(--accent);
+  color: white;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+}
+
+.template-btn.active {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+.template-btn.active:hover {
+  background: var(--accent-hover);
+  border-color: var(--accent-hover);
+}
+
+/* Template Creation Form */
+#templateCreationForm {
+  border: 2px solid var(--accent);
+  border-radius: 12px;
+  background: rgba(59, 130, 246, 0.02) !important;
+}
+
+#templateCreationForm .card-body {
+  padding: 1.5rem;
+}
+
+#templateCreationForm .form-control,
+#templateCreationForm .form-select {
+  border: 2px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+#templateCreationForm .form-control:focus,
+#templateCreationForm .form-select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+}
+
+/* Custom Template Buttons */
+.template-btn[data-template^="custom_"] {
+  border-color: var(--success);
+  color: var(--success);
+}
+
+.template-btn[data-template^="custom_"]:hover {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+
+.template-btn[data-template^="custom_"].active {
+  background: var(--success);
+  border-color: var(--success);
+  color: white;
+}
+
+/* Enhanced Message Actions */
+.message-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 1rem;
+}
+
+.message-actions .btn {
+  flex: 1;
+  min-width: 120px;
+}
+
+/* Compact Contact Items */
+.contact-item-compact {
+  transition: all 0.3s ease;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border) !important;
+  cursor: pointer;
+}
+
+.contact-item-compact:hover {
+  background: var(--bg-card);
+  border-color: var(--accent) !important;
+  box-shadow: var(--shadow-hover);
+  transform: translateY(-1px);
+}
+
+.contact-item-compact .form-check-input {
+  width: 1rem;
+  height: 1rem;
+  border-radius: 4px;
+  border: 2px solid var(--border);
+  transition: all 0.3s ease;
+}
+
+.contact-item-compact .form-check-input:checked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+.contact-item-compact .form-check-input:focus {
+  box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.1);
+}
+
+/* Enhanced Status Indicators */
+.status-indicator {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  display: inline-block;
+  margin-right: 12px;
+  box-shadow: 0 0 0 2px rgba(255, 255, 255, 0.8);
+  position: relative;
+}
+
+.status-indicator::after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.8);
+}
+
+.status-online { 
+  background-color: var(--success);
+  box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+}
+.status-offline { 
+  background-color: var(--danger);
+  box-shadow: 0 0 0 2px rgba(239, 68, 68, 0.2);
+}
+.status-pending { 
+  background-color: var(--warning);
+  box-shadow: 0 0 0 2px rgba(245, 158, 11, 0.2);
+}
+
+/* Enhanced Progress Bar */
+.progress {
+  background: var(--bg-secondary);
+  border-radius: 12px;
+  height: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.1);
+}
+
+.progress-bar {
+  background: linear-gradient(90deg, var(--accent), var(--success));
+  border-radius: 12px;
+  transition: width 0.5s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.progress-bar::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: linear-gradient(
+    90deg,
+    transparent,
+    rgba(255, 255, 255, 0.3),
+    transparent
+  );
+  animation: shimmer 2s infinite;
+}
+
+@keyframes shimmer {
+  0% { transform: translateX(-100%); }
+  100% { transform: translateX(100%); }
+}
+
+/* Enhanced Quick Stats */
+.quick-stats {
+  background: var(--bg-card);
+  border-radius: 12px;
+  padding: 1rem;
+}
+
+.quick-stats h6 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 0.25rem;
+}
+
+.quick-stats small {
+  font-size: 0.8rem;
+  font-weight: 500;
+}
+
+/* Enhanced Form Controls */
+.form-control:focus, .form-select:focus {
+  background: var(--bg-secondary);
+  border-color: var(--accent);
+  color: var(--text-primary);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  outline: none;
+  transform: translateY(-1px);
+}
+
+.form-control, .form-select {
+  transition: all 0.3s ease;
+}
+
+/* Enhanced Buttons */
+.btn {
+  position: relative;
+  overflow: hidden;
+}
+
+.btn::before {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 0;
+  height: 0;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  transition: width 0.6s, height 0.6s;
+}
+
+.btn:active::before {
+  width: 300px;
+  height: 300px;
+}
+
+/* Enhanced Cards */
+.card {
+  transition: all 0.3s ease;
+  position: relative;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 3px;
+  background: linear-gradient(90deg, var(--accent), var(--success));
+  border-radius: 16px 16px 0 0;
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+.card:hover::before {
+  opacity: 1;
+}
+
 /* Responsive Design */
+@media (max-width: 1200px) {
+  .container-fluid {
+    padding-left: 1rem;
+    padding-right: 1rem;
+  }
+}
+
+@media (max-width: 992px) {
+  .template-option {
+    padding: 1rem;
+  }
+  
+  .template-option h6 {
+    font-size: 0.95rem;
+  }
+  
+  .template-option p {
+    font-size: 0.85rem;
+  }
+}
+
 @media (max-width: 768px) {
   .navbar-brand {
     font-size: 1.2rem;
-  }
-  
-  .display-6 {
-    font-size: 1.75rem;
   }
   
   .card-body {
@@ -383,33 +668,99 @@ body {
     font-size: 0.9rem;
   }
   
-  .stats-card h4 {
-    font-size: 1.75rem;
+  .template-btn {
+    font-size: 0.8rem;
+    padding: 0.5rem 0.75rem;
   }
   
-  .stats-card i {
-    font-size: 2rem;
+  .contact-item-compact {
+    padding: 0.75rem !important;
+  }
+  
+  .contact-item-compact .form-check-input {
+    width: 0.875rem;
+    height: 0.875rem;
+  }
+  
+  .status-indicator {
+    width: 10px;
+    height: 10px;
+    margin-right: 8px;
   }
 }
 
 @media (max-width: 576px) {
-  .container {
-    padding: 0 15px;
+  .container-fluid {
+    padding-left: 0.75rem;
+    padding-right: 0.75rem;
   }
   
-  .strategy-step {
-    padding: 1.25rem;
-  }
-  
-  .strategy-step-number {
-    width: 36px;
-    height: 36px;
-    font-size: 1rem;
-    margin-right: 16px;
+  .card-body {
+    padding: 1rem;
   }
   
   .btn {
     width: 100%;
     margin-bottom: 0.75rem;
+  }
+  
+  .template-btn {
+    flex: 1;
+    min-width: 120px;
+    font-size: 0.75rem;
+    padding: 0.5rem;
+  }
+  
+  .contact-item-compact {
+    padding: 0.625rem !important;
+    margin-bottom: 0.5rem;
+  }
+  
+  .contact-item-compact .form-check-input {
+    width: 0.75rem;
+    height: 0.75rem;
+  }
+  
+  .status-indicator {
+    width: 8px;
+    height: 8px;
+    margin-right: 6px;
+  }
+  
+  .badge {
+    font-size: 0.7rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .navbar-brand span {
+    display: none;
+  }
+  
+  .card-header h5 {
+    font-size: 1rem;
+  }
+  
+  .form-label {
+    font-size: 0.9rem;
+  }
+  
+  .template-option {
+    padding: 0.625rem;
+  }
+  
+  .contact-item {
+    padding: 0.625rem;
+  }
+  
+  .status-indicator {
+    width: 10px;
+    height: 10px;
+    margin-right: 8px;
+  }
+  
+  .contact-item .form-check-input {
+    width: 1rem;
+    height: 1rem;
   }
 }

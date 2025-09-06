@@ -16,220 +16,250 @@
 <body>
   <!-- Navigation -->
   <nav class="navbar navbar-expand-lg navbar-light">
-    <div class="container">
+    <div class="container-fluid px-3">
       <a class="navbar-brand" href="#">
         <i class="fas fa-chart-line me-2"></i>
-        FOREX BROADCAST
+        <span class="d-none d-sm-inline">FOREX BROADCAST</span>
+        <span class="d-inline d-sm-none">FX</span>
       </a>
       <div class="navbar-nav ms-auto">
         <span class="navbar-text">
           <i class="fas fa-circle text-success me-1"></i>
-          <span id="connectionStatus">Connected</span>
+          <span id="connectionStatus" class="d-none d-md-inline">Connected</span>
         </span>
       </div>
     </div>
   </nav>
 
-  <div class="container py-4">
+  <div class="container-fluid px-3 py-4">
     <!-- Main Content -->
     <div class="row">
+      <!-- Message Builder - Main Focus -->
       <div class="col-lg-8">
-        <!-- Add Contact Form -->
+        <!-- Message Builder Card -->
         <div class="card mb-4">
-          <div class="card-header">
+          <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="mb-0">
-              <i class="fas fa-user-plus me-2"></i>
-              Add Prospect
+              <i class="fas fa-edit me-2"></i>
+              Message Builder
             </h5>
-          </div>
-          <div class="card-body">
-            <form id="contactForm" class="row g-3">
-              <div class="col-md-5">
-                <label for="contactName" class="form-label">Name</label>
-                <input type="text" class="form-control" id="contactName" placeholder="Full name" required>
-              </div>
-              <div class="col-md-5">
-                <label for="contactPhone" class="form-label">Phone</label>
-                <input type="tel" class="form-control" id="contactPhone" placeholder="1234567890" required>
-                <span class="text-muted">Dont add + in the phone number</span>
-              </div>
-              <div class="col-md-2 d-grid">
-                <button type="submit" class="btn btn-primary">
-                  Add
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-
-        <!-- Contacts List -->
-        <div class="card">
-          <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center">
-              <h5 class="mb-0">
-                <i class="fas fa-address-book me-2"></i>
-                Prospects
-              </h5>
-              <div class="d-flex gap-2">
-                <input type="text" class="form-control form-control-sm" id="searchContacts" placeholder="Search...">
-                <select class="form-select form-select-sm" id="statusFilter">
-                  <option value="">All</option>
-                  <option value="online">Online</option>
-                  <option value="offline">Offline</option>
-                  <option value="pending">Pending</option>
-                </select>
-              </div>
+            <div class="d-flex gap-2">
+              <span class="badge bg-primary" id="selectedCount">0 selected</span>
+              <span class="badge bg-success" id="onlineCount">0 online</span>
             </div>
           </div>
           <div class="card-body">
-            <div id="contactsList" class="list-group">
-              <!-- Contacts will be loaded here -->
-            </div>
-            
-            <!-- Pagination -->
-            <nav class="mt-3">
-              <ul class="pagination justify-content-center" id="pagination"></ul>
-            </nav>
-          </div>
-        </div>
-      </div>
-
-      <!-- Broadcast Section -->
-      <div class="col-lg-4">
-        <div class="card mb-4">
-          <div class="card-header">
-            <h5 class="mb-0">
-              <i class="fas fa-broadcast-tower me-2"></i>
-              BROADCAST
-            </h5>
-          </div>
-          <div class="card-body">
-            <!-- Template Selection -->
+            <!-- Template Creation Step -->
             <div class="mb-4">
-              <label class="form-label fw-bold">Choose Template</label>
-              <div class="template-option" data-template="realNumber">
-                <h6><i class="fas fa-shield-alt me-2 text-accent"></i>Real Number</h6>
-                <p>Establish authenticity with your real trading number</p>
-              </div>
-              <div class="template-option" data-template="privacyRequest">
-                <h6><i class="fas fa-lock me-2 text-accent"></i>Privacy Request</h6>
-                <p>Create exclusivity with confidentiality</p>
-              </div>
-              <div class="template-option" data-template="telegramCTA">
-                <h6><i class="fas fa-telegram me-2 text-accent"></i>Telegram CTA</h6>
-                <p>Direct conversion to Telegram channel</p>
-              </div>
-              <div class="template-option" data-template="fullStrategy">
-                <h6><i class="fas fa-rocket me-2 text-accent"></i>Complete Strategy</h6>
-                <p>Full approach with all elements</p>
-              </div>
-            </div>
-
-            <div class="mb-3">
-              <label for="customMessage" class="form-label fw-bold">Message</label>
-              <textarea class="form-control" id="customMessage" rows="6" placeholder="Enter your message here..."></textarea>
-              <div class="mt-2 d-flex gap-2">
-                <button class="btn btn-outline-secondary btn-sm" id="insertTemplateBtn">
-                  <i class="fas fa-magic me-1"></i>
-                  Confirm
-                </button>
-                <button class="btn btn-outline-primary btn-sm" id="sendMessageBtn">
-                  <i class="fas fa-paper-plane me-1"></i>
-                  Insert Template
-                  <!-- Send Message -->
+              <div class="d-flex justify-content-between align-items-center mb-3">
+                <h6 class="mb-0">Step 1: Create Message Template</h6>
+                <button class="btn btn-outline-primary btn-sm" id="createTemplateBtn">
+                  <i class="fas fa-plus me-1"></i>Create New Template
                 </button>
               </div>
-              <small class="text-muted mt-2 d-block">
-                <i class="fas fa-info-circle me-1"></i>
-                Messages will be sent to the webhook endpoint
-              </small>
-            </div>
-
-            <div class="mb-3">
-              <label for="telegramLink" class="form-label fw-bold">Telegram Link</label>
-              <input type="url" class="form-control" id="telegramLink" placeholder="https://t.me/yourchannel" 
-              value="https://t.me/tradetabofficial">
-            </div>
-
-            <div class="mb-3">
-              <label class="form-label fw-bold">Recipients</label>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="selectAllContacts">
-                <label class="form-check-label" for="selectAllContacts">
-                  All Prospects
-                </label>
+              
+              <!-- Template Selection -->
+              <div class="d-flex flex-wrap gap-2 mb-3">
+                <button class="btn btn-outline-primary btn-sm template-btn" data-template="realNumber">
+                  <i class="fas fa-shield-alt me-1"></i>Real Number
+                </button>
+                <button class="btn btn-outline-primary btn-sm template-btn" data-template="privacyRequest">
+                  <i class="fas fa-lock me-1"></i>Privacy
+                </button>
+                <button class="btn btn-outline-primary btn-sm template-btn" data-template="telegramCTA">
+                  <i class="fas fa-telegram me-1"></i>Telegram CTA
+                </button>
+                <button class="btn btn-outline-primary btn-sm template-btn" data-template="fullStrategy">
+                  <i class="fas fa-rocket me-1"></i>Full Strategy
+                </button>
               </div>
-              <div class="form-check">
-                <input class="form-check-input" type="checkbox" id="onlineContactsOnly">
-                <label class="form-check-label" for="onlineContactsOnly">
-                  Online Only
-                </label>
+              
+              <!-- Template Creation Form (Hidden by default) -->
+              <div id="templateCreationForm" class="card bg-light" style="display: none;">
+                <div class="card-body">
+                  <div class="row">
+                    <div class="col-md-6">
+                      <label for="templateName" class="form-label">Template Name</label>
+                      <input type="text" class="form-control" id="templateName" placeholder="e.g., Welcome Message">
+                    </div>
+                    <div class="col-md-6">
+                      <label for="templateCategory" class="form-label">Category</label>
+                      <select class="form-select" id="templateCategory">
+                        <option value="greeting">Greeting</option>
+                        <option value="followup">Follow-up</option>
+                        <option value="promotion">Promotion</option>
+                        <option value="custom">Custom</option>
+                      </select>
+                    </div>
+                  </div>
+                  <div class="mt-3">
+                    <label for="templateContent" class="form-label">Template Content</label>
+                    <textarea class="form-control" id="templateContent" rows="4" placeholder="Enter your template content here..."></textarea>
+                    <div class="mt-2 d-flex gap-2">
+                      <button class="btn btn-success btn-sm" id="saveTemplateBtn">
+                        <i class="fas fa-save me-1"></i>Save Template
+                      </button>
+                      <button class="btn btn-secondary btn-sm" id="cancelTemplateBtn">
+                        <i class="fas fa-times me-1"></i>Cancel
+                      </button>
+                    </div>
+                  </div>
+                </div>
               </div>
             </div>
 
-            <div class="d-grid gap-2">
-              <button class="btn btn-primary" id="prepareBroadcast">
-                <i class="fas fa-cog me-1"></i>
-                Messages templates Complete
-              </button>
-              <button class="btn btn-success" id="sendBroadcast" disabled>
-                <i class="fas fa-paper-plane me-1"></i>
+            <!-- Message Input - Step 2 -->
+            <div class="mb-4">
+              <div class="d-flex justify-content-between align-items-center mb-2">
+                <h6 class="mb-0">Step 2: Build Your Message</h6>
+                <div class="d-flex gap-1">
+                  <button class="btn btn-outline-primary btn-sm" id="insertTemplateBtn" disabled>
+                    <i class="fas fa-magic me-1"></i>Insert Template
+                  </button>
+                  <button class="btn btn-outline-secondary btn-sm" id="clearMessageBtn">
+                    <i class="fas fa-eraser"></i>
+                  </button>
+                  <button class="btn btn-outline-info btn-sm" id="previewMessageBtn">
+                    <i class="fas fa-eye"></i>
+                  </button>
+                </div>
+              </div>
+              <textarea class="form-control" id="customMessage" rows="10" placeholder="Start typing your message or select a template above, then click 'Insert Template'..."></textarea>
+              <div class="d-flex justify-content-between mt-2">
+                <small class="text-muted">Characters: <span id="charCount">0</span></small>
+                <small class="text-muted">Lines: <span id="lineCount">1</span></small>
+              </div>
+            </div>
+
+            <!-- Telegram Link - Step 3 -->
+            <div class="mb-4">
+              <h6 class="mb-3">Step 3: Configure & Prepare</h6>
+              <div class="row">
+                <div class="col-md-8">
+                  <label for="telegramLink" class="form-label fw-bold">Telegram Link</label>
+                  <input type="url" class="form-control" id="telegramLink" placeholder="https://t.me/yourchannel" 
+                  value="https://t.me/tradetabofficial">
+                </div>
+                <div class="col-md-4 d-flex align-items-end">
+                  <button class="btn btn-primary w-100" id="prepareBroadcast">
+                    <i class="fas fa-cog me-1"></i>
+                    Prepare Broadcast
+                  </button>
+                </div>
+              </div>
+            </div>
+
+            <!-- Send Button -->
+            <div class="d-grid">
+              <button class="btn btn-success btn-lg" id="sendBroadcast" disabled>
+                <i class="fas fa-paper-plane me-2"></i>
                 Send Broadcast
-                <!-- <span class="loading-spinner spinner-border spinner-border-sm ms-2"></span> -->
               </button>
             </div>
 
+            <!-- Progress -->
             <div class="mt-3">
-              <div class="progress" style="height: 10px;">
+              <div class="progress" style="height: 6px;">
                 <div class="progress-bar" id="broadcastProgress" role="progressbar" style="width: 0%"></div>
               </div>
               <small class="text-secondary" id="progressText">Ready to broadcast</small>
             </div>
           </div>
         </div>
-      </div>
-    </div>
 
-        <!-- Statistics -->
-        <div class="row mb-4">
-          <div class="col-md-3 mb-3">
-            <div class="card stats-card h-100">
-              <div class="card-body text-center">
-                <i class="fas fa-users mb-2"></i>
-                <h4 id="totalContacts">0</h4>
-                <p class="mb-0">Prospects</p>
+        <!-- Recipients Selection - Compact -->
+        <div class="card">
+          <div class="card-header">
+            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+              <h5 class="mb-0">
+                <i class="fas fa-users me-2"></i>
+                Recipients
+              </h5>
+              <div class="d-flex gap-2">
+                <input type="text" class="form-control form-control-sm" id="searchContacts" placeholder="Search..." style="width: 150px;">
+                <select class="form-select form-select-sm" id="statusFilter" style="width: 100px;">
+                  <option value="">All</option>
+                  <option value="online">Online</option>
+                  <option value="offline">Offline</option>
+                  <option value="pending">Pending</option>
+                </select>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="selectAllContacts">
+                  <label class="form-check-label" for="selectAllContacts">All</label>
+                </div>
+                <div class="form-check form-check-inline">
+                  <input class="form-check-input" type="checkbox" id="onlineContactsOnly">
+                  <label class="form-check-label" for="onlineContactsOnly">Online</label>
+                </div>
               </div>
             </div>
           </div>
-          <div class="col-md-3 mb-3">
-            <div class="card stats-card h-100">
-              <div class="card-body text-center">
-                <i class="fas fa-paper-plane mb-2"></i>
-                <h4 id="sentMessages">0</h4>
-                <p class="mb-0">Messages</p>
-              </div>
+          <div class="card-body p-2">
+            <div id="contactsList" class="row g-2">
+              <!-- Contacts will be loaded here -->
             </div>
+            
+            <!-- Pagination -->
+            <nav class="mt-3">
+              <ul class="pagination justify-content-center pagination-sm" id="pagination"></ul>
+            </nav>
           </div>
-          <div class="col-md-3 mb-3">
-            <div class="card stats-card h-100">
-              <div class="card-body text-center">
-                <i class="fas fa-chart-line mb-2"></i>
-                <h4 id="conversionRate">0%</h4>
-                <p class="mb-0">Conversion</p>
+        </div>
+      </div>
+
+      <!-- Sidebar - Compact -->
+      <div class="col-lg-4">
+        <!-- Add Prospect - Compact -->
+        <div class="card mb-3">
+          <div class="card-header">
+            <h6 class="mb-0">
+              <i class="fas fa-user-plus me-2"></i>
+              Add Prospect
+            </h6>
+          </div>
+          <div class="card-body p-3">
+            <form id="contactForm">
+              <div class="mb-2">
+                <input type="text" class="form-control form-control-sm" id="contactName" placeholder="Name" required>
               </div>
-            </div>
+              <div class="mb-2">
+                <input type="tel" class="form-control form-control-sm" id="contactPhone" placeholder="Phone" required>
+              </div>
+              <button type="submit" class="btn btn-primary btn-sm w-100">
+                <i class="fas fa-plus me-1"></i>
+                Add
+              </button>
+            </form>
           </div>
-          <div class="col-md-3 mb-3">
-            <div class="card stats-card h-100">
-              <div class="card-body text-center">
-                <i class="fas fa-telegram mb-2"></i>
-                <h4 id="telegramClicks">0</h4>
-                <p class="mb-0">Clicks</p>
+        </div>
+
+        <!-- Quick Stats - Compact -->
+        <div class="card">
+          <div class="card-header">
+            <h6 class="mb-0">
+              <i class="fas fa-chart-pie me-2"></i>
+              Stats
+            </h6>
+          </div>
+          <div class="card-body p-3">
+            <div class="row text-center">
+              <div class="col-4">
+                <h6 class="text-primary mb-1" id="totalContacts">0</h6>
+                <small class="text-muted">Total</small>
+              </div>
+              <div class="col-4">
+                <h6 class="text-success mb-1" id="sentMessages">0</h6>
+                <small class="text-muted">Sent</small>
+              </div>
+              <div class="col-4">
+                <h6 class="text-warning mb-1" id="conversionRate">0%</h6>
+                <small class="text-muted">Rate</small>
               </div>
             </div>
           </div>
         </div>
-    
+      </div>
+    </div>
   </div>
 
   <!-- Toast Container -->
@@ -256,6 +286,8 @@
         this.isBroadcasting = false;
         this.telegramLink = "https://t.me/tradetabofficial";
         this.selectedTemplate = null;
+        this.isPrepared = false;
+        this.customTemplates = {};
         
         this.init();
       }
@@ -265,43 +297,63 @@
         this.loadContacts();
         this.updateStats();
         this.loadMessageTemplates();
-        
-        // Initially disable send message button
-        $('#sendMessageBtn').prop('disabled', true);
+        this.updateQuickStats();
       }
 
       bindEvents() {
+        // Contact form
         $('#contactForm').on('submit', (e) => {
           e.preventDefault();
           this.addContact();
         });
 
+        // Search and filter
         $('#searchContacts').on('input', () => this.filterContacts());
         $('#statusFilter').on('change', () => this.filterContacts());
 
+        // Broadcast actions
         $('#prepareBroadcast').on('click', () => this.prepareBroadcast());
         $('#sendBroadcast').on('click', () => this.sendBroadcast());
-        $('#sendMessageBtn').on('click', () => this.sendIndividualMessage());
+        
+        // Message actions
         $('#insertTemplateBtn').on('click', () => this.insertTemplate());
+        $('#clearMessageBtn').on('click', () => this.clearMessage());
+        $('#previewMessageBtn').on('click', () => this.previewMessage());
+        
+        // Selection controls
         $('#selectAllContacts').on('change', () => this.toggleSelectAll());
+        $('#onlineContactsOnly').on('change', () => this.toggleOnlineOnly());
+        
+        // Telegram link
         $('#telegramLink').on('input', (e) => {
           this.telegramLink = e.target.value;
           this.updateMessagePreview();
         });
 
-        // Allow manual typing in the message textarea
+        // Message textarea with character count
         $('#customMessage').on('input', () => {
-          // Enable send button when there's text
-          const hasText = $('#customMessage').val().trim().length > 0;
-          $('#sendMessageBtn').prop('disabled', !hasText);
+          this.updateCharCount();
+          this.isPrepared = false;
+          $('#prepareBroadcast').prop('disabled', false);
+          $('#sendBroadcast').prop('disabled', true);
+          // Disable Insert Template if user is typing manually
+          if ($('#customMessage').val().trim().length > 0) {
+            $('#insertTemplateBtn').prop('disabled', true);
+          }
         });
 
-        // Template selection
-        $('.template-option').on('click', (e) => {
+        // Template selection - NEW BUTTONS
+        $('.template-btn').on('click', (e) => {
           const template = $(e.currentTarget).data('template');
           this.selectTemplate(template);
         });
 
+        // Template creation
+        $('#createTemplateBtn').on('click', () => this.showTemplateCreation());
+        $('#saveTemplateBtn').on('click', () => this.saveTemplate());
+        $('#cancelTemplateBtn').on('click', () => this.hideTemplateCreation());
+
+        // Pagination
         $(document).on('click', '.pagination .page-link', (e) => {
           e.preventDefault();
           const page = parseInt($(e.target).text());
@@ -311,13 +363,16 @@
 
       selectTemplate(template) {
         // Remove previous selection
-        $('.template-option').removeClass('selected');
+        $('.template-btn').removeClass('active');
         
         // Add selection to clicked template
-        $(`.template-option[data-template="${template}"]`).addClass('selected');
+        $(`.template-btn[data-template="${template}"]`).addClass('active');
         
         this.selectedTemplate = template;
         this.loadMessageTemplate();
+        
+        // Enable Insert Template button
+        $('#insertTemplateBtn').prop('disabled', false);
       }
 
       loadMessageTemplates() {
@@ -332,9 +387,76 @@
       }
 
       loadMessageTemplate() {
-        if (this.selectedTemplate && this.messageTemplates[this.selectedTemplate]) {
-          $('#customMessage').val(this.messageTemplates[this.selectedTemplate]);
+        // This method now just enables the Insert Template button
+        // The actual template insertion happens when Insert Template is clicked
+        // This allows users to see what template is selected before processing
+      }
+
+      updateCharCount() {
+        const text = $('#customMessage').val();
+        const charCount = text.length;
+        const lineCount = text.split('\n').length;
+        
+        $('#charCount').text(charCount);
+        $('#lineCount').text(lineCount);
+      }
+
+      showTemplateCreation() {
+        $('#templateCreationForm').slideDown(300);
+        $('#createTemplateBtn').prop('disabled', true);
+      }
+
+      hideTemplateCreation() {
+        $('#templateCreationForm').slideUp(300);
+        $('#createTemplateBtn').prop('disabled', false);
+        this.clearTemplateForm();
+      }
+
+      clearTemplateForm() {
+        $('#templateName').val('');
+        $('#templateCategory').val('greeting');
+        $('#templateContent').val('');
+      }
+
+      saveTemplate() {
+        const name = $('#templateName').val().trim();
+        const category = $('#templateCategory').val();
+        const content = $('#templateContent').val().trim();
+
+        if (!name || !content) {
+          this.showToast('Please fill in template name and content', 'warning');
+          return;
         }
+
+        // Create a new template button
+        const templateId = 'custom_' + Date.now();
+        const templateBtn = `
+          <button class="btn btn-outline-success btn-sm template-btn" data-template="${templateId}">
+            <i class="fas fa-file-text me-1"></i>${name}
+          </button>
+        `;
+
+        // Add the new template button
+        $('.template-btn').last().after(templateBtn);
+
+        // Store the template
+        if (!this.customTemplates) {
+          this.customTemplates = {};
+        }
+        this.customTemplates[templateId] = {
+          name: name,
+          category: category,
+          content: content
+        };
+
+        // Bind click event to new button
+        $(`.template-btn[data-template="${templateId}"]`).on('click', (e) => {
+          const template = $(e.currentTarget).data('template');
+          this.selectTemplate(template);
+        });
+
+        this.hideTemplateCreation();
+        this.showToast(`Template "${name}" saved successfully!`, 'success');
       }
 
       updateMessagePreview() {
@@ -355,6 +477,7 @@
           }));
           this.displayContacts();
           this.updateStats();
+          this.updateQuickStats();
         } catch (error) {
           this.showToast('Error loading contacts', 'error');
         } finally {
@@ -395,18 +518,17 @@
         const pageContacts = this.contacts.slice(start, end);
 
         const contactsHtml = pageContacts.map(contact => `
-          <div class="list-group-item contact-item d-flex justify-content-between align-items-center">
-            <div class="d-flex align-items-center">
-              <span class="status-indicator status-${contact.status}"></span>
-              <div>
-                <strong class="text-primary">${contact.userName}</strong>
-                <br>
-                <small class="text-secondary">${contact.phone}</small>
+          <div class="col-md-6 col-lg-4">
+            <div class="contact-item-compact d-flex align-items-center p-2 border rounded">
+              <div class="form-check me-2">
+                <input class="form-check-input contact-checkbox" type="checkbox" 
+                       value="${contact.id}" ${contact.selected ? 'checked' : ''}>
               </div>
-            </div>
-            <div class="form-check">
-              <input class="form-check-input contact-checkbox" type="checkbox" 
-                     value="${contact.id}" ${contact.selected ? 'checked' : ''}>
+              <span class="status-indicator status-${contact.status} me-2"></span>
+              <div class="flex-grow-1">
+                <div class="fw-bold text-primary small">${contact.userName}</div>
+                <div class="text-secondary small">${contact.phone}</div>
+              </div>
             </div>
           </div>
         `).join('');
@@ -414,6 +536,7 @@
         $('#contactsList').html(contactsHtml);
         this.generatePagination();
         this.bindContactCheckboxes();
+        this.updateQuickStats();
       }
 
       generatePagination() {
@@ -437,6 +560,7 @@
           const contact = this.contacts.find(c => c.id === contactId);
           if (contact) {
             contact.selected = $(e.target).is(':checked');
+            this.updateQuickStats();
           }
         });
       }
@@ -489,6 +613,22 @@
         this.contacts.forEach(contact => {
           contact.selected = isChecked;
         });
+        this.updateQuickStats();
+      }
+
+      toggleOnlineOnly() {
+        const isOnlineOnly = $('#onlineContactsOnly').is(':checked');
+        if (isOnlineOnly) {
+          $('.contact-checkbox').each((index, checkbox) => {
+            const contactId = $(checkbox).val();
+            const contact = this.contacts.find(c => c.id === contactId);
+            if (contact && contact.status !== 'online') {
+              $(checkbox).prop('checked', false);
+              contact.selected = false;
+            }
+          });
+        }
+        this.updateQuickStats();
       }
 
       prepareBroadcast() {
@@ -499,93 +639,165 @@
           return;
         }
 
+        const selectedContacts = this.contacts.filter(c => c.selected);
+        if (selectedContacts.length === 0) {
+          this.showToast('Please select at least one recipient', 'warning');
+          return;
+        }
+
+        this.isPrepared = true;
+        $('#prepareBroadcast').prop('disabled', true);
         $('#sendBroadcast').prop('disabled', false);
-        this.showToast('Ready to send message', 'success');
+        this.showToast(`Ready to send to ${selectedContacts.length} recipients`, 'success');
       }
 
-      insertTemplate() {
-        // const template = "Hello 'Name', do you remember me? I was at the conference, I'm Natt, how was it? Do you want to know more about me? Write me a message to this number, don't share it with anyone else";
-        // $('#customMessage').val(template);
-        
-        // Enable send button since we now have text
-        $('#sendMessageBtn').prop('disabled', false);
-        
-        this.showToast('Template inserted successfully', 'success');
-      }
-
-      async sendIndividualMessage() {
-        const message = $('#customMessage').val().trim();
-        
-        if (!message) {
-          this.showToast('Please enter a message first', 'warning');
+      async insertTemplate() {
+        if (!this.selectedTemplate) {
+          this.showToast('Please select a template first', 'warning');
           return;
         }
 
         try {
-          $('#sendMessageBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>Sending...');
+          $('#insertTemplateBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>Processing...');
           
-          // Send the message to the webhook with the specified format
-          await $.ajax({
-            url: "https://ttsupport-n8n.rfi9up.easypanel.host/webhook/131f8084-7fd7-41e7-bac7-717370210773",
+          // Get the template content
+          let templateContent = '';
+          if (this.customTemplates && this.customTemplates[this.selectedTemplate]) {
+            templateContent = this.customTemplates[this.selectedTemplate].content;
+          } else if (this.messageTemplates[this.selectedTemplate]) {
+            templateContent = this.messageTemplates[this.selectedTemplate];
+          }
+
+          // Send the template to the API for AI generation
+          const response = await $.ajax({
+            url: this.API_ENDPOINTS.createMessage,
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({
-              "template": message
+              "template": templateContent
             })
           });
 
-          this.showToast('Message sent successfully!', 'success');
-          this.updateStats();
+          // Insert the AI-generated message
+          if (response && response.message) {
+            $('#customMessage').val(response.message);
+          } else {
+            // Fallback to original template if no AI response
+            $('#customMessage').val(templateContent);
+          }
+
+          this.updateCharCount();
+          this.isPrepared = false;
+          $('#prepareBroadcast').prop('disabled', false);
+          $('#sendBroadcast').prop('disabled', true);
+          
+          this.showToast('Template processed and inserted successfully!', 'success');
           
         } catch (error) {
-          this.showToast('Error sending message: ' + error.message, 'error');
+          this.showToast('Error processing template: ' + error.message, 'error');
+          // Fallback to original template
+          this.loadMessageTemplate();
         } finally {
-          $('#sendMessageBtn').prop('disabled', false).html('<i class="fas fa-paper-plane me-1"></i>Send Message');
+          $('#insertTemplateBtn').prop('disabled', false).html('<i class="fas fa-magic me-1"></i>Insert Template');
         }
+      }
+
+      clearMessage() {
+        $('#customMessage').val('');
+        this.selectedTemplate = null;
+        $('.template-btn').removeClass('active');
+        $('#insertTemplateBtn').prop('disabled', true);
+        this.updateCharCount();
+        this.isPrepared = false;
+        $('#prepareBroadcast').prop('disabled', false);
+        $('#sendBroadcast').prop('disabled', true);
+        this.showToast('Message cleared', 'info');
+      }
+
+      previewMessage() {
+        const message = $('#customMessage').val().trim();
+        if (!message) {
+          this.showToast('No message to preview', 'warning');
+          return;
+        }
+
+        // Create a modal for preview
+        const previewModal = `
+          <div class="modal fade" id="previewModal" tabindex="-1">
+            <div class="modal-dialog modal-lg">
+              <div class="modal-content">
+                <div class="modal-header">
+                  <h5 class="modal-title">Message Preview</h5>
+                  <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+                </div>
+                <div class="modal-body">
+                  <div class="border rounded p-3 bg-light">
+                    <pre style="white-space: pre-wrap; font-family: inherit;">${message}</pre>
+                  </div>
+                </div>
+                <div class="modal-footer">
+                  <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        `;
+
+        // Remove existing modal if any
+        $('#previewModal').remove();
+        
+        // Add and show modal
+        $('body').append(previewModal);
+        $('#previewModal').modal('show');
       }
 
       async sendBroadcast() {
-        if (this.isBroadcasting) return;
+        if (this.isBroadcasting || !this.isPrepared) return;
+
+        const selectedContacts = this.contacts.filter(c => c.selected);
+        if (selectedContacts.length === 0) {
+          this.showToast('Please select at least one recipient', 'warning');
+          return;
+        }
 
         try {
           this.isBroadcasting = true;
-          $('#sendBroadcast').prop('disabled', true);
-          $('.loading-spinner').show();
+          $('#sendBroadcast').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>Sending...');
 
-          // Get the message from customMessage textarea
-          const message = $('#customMessage').val().trim();
-          
-          if (!message) {
-            this.showToast('Please enter a message first', 'warning');
-            return;
-          }
-
-          // Send the message to the webhook with the specified format
+          // Send the message to the webhook
           await $.ajax({
-            // url: "https://ttsupport-n8n.rfi9up.easypanel.host/webhook/131f8084-7fd7-41e7-bac7-717370210773",
-            url: "https://ttsupport-n8n.rfi9up.easypanel.host/webhook/22373b13-d0e2-4eec-a972-bc93c3de6f99",
+            url: this.API_ENDPOINTS.sendMessage,
             type: 'GET'
           });
 
-          this.showToast('Message sent successfully!', 'success');
+          this.showToast(`Broadcast sent to ${selectedContacts.length} recipients successfully!`, 'success');
           this.updateStats();
           
+          // Reset form
+          this.isPrepared = false;
+          $('#prepareBroadcast').prop('disabled', false);
+          $('#sendBroadcast').prop('disabled', true).html('<i class="fas fa-paper-plane me-1"></i>Send Broadcast');
+          
         } catch (error) {
-          this.showToast('Error sending message: ' + error.message, 'error');
+          this.showToast('Error sending broadcast: ' + error.message, 'error');
         } finally {
           this.isBroadcasting = false;
-          $('#sendBroadcast').prop('disabled', true);
-          $('.loading-spinner').hide();
         }
       }
-
-
 
       updateStats() {
         $('#totalContacts').text(this.contacts.length);
         $('#sentMessages').text(Math.floor(Math.random() * 500) + 200);
         $('#conversionRate').text((Math.random() * 20 + 10).toFixed(1) + '%');
         $('#telegramClicks').text(Math.floor(Math.random() * 100) + 50);
+      }
+
+      updateQuickStats() {
+        const selectedCount = this.contacts.filter(c => c.selected).length;
+        const onlineCount = this.contacts.filter(c => c.status === 'online').length;
+        
+        $('#selectedCount').text(selectedCount);
+        $('#onlineCount').text(onlineCount);
       }
 
       getRandomStatus() {
