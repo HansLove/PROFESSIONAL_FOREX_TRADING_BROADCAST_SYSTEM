@@ -49,10 +49,10 @@
             </div>
           </div>
           <div class="card-body">
-            <!-- Template Creation Step -->
+            <!-- Message Options -->
             <div class="mb-4">
-              <div class="d-flex justify-content-between align-items-center mb-3">
-                <h6 class="mb-0">Step 1: Create Message Template</h6>
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-3 gap-2">
+                <h6 class="mb-0">Choose Your Approach</h6>
                 <button class="btn btn-outline-primary btn-sm" id="createTemplateBtn">
                   <i class="fas fa-plus me-1"></i>Create New Template
                 </button>
@@ -108,18 +108,18 @@
               </div>
             </div>
 
-            <!-- Message Input - Step 2 -->
+            <!-- Message Input -->
             <div class="mb-4">
-              <div class="d-flex justify-content-between align-items-center mb-2">
-                <h6 class="mb-0">Step 2: Build Your Message</h6>
-                <div class="d-flex gap-1">
-                  <button class="btn btn-outline-primary btn-sm" id="insertTemplateBtn" disabled>
-                    <i class="fas fa-magic me-1"></i>Insert Template
+              <div class="d-flex flex-column flex-md-row justify-content-between align-items-start align-items-md-center mb-2 gap-2">
+                <h6 class="mb-0">OR Write Your Own Message</h6>
+                <div class="d-flex flex-wrap gap-1">
+                  <button class="btn btn-outline-primary btn-sm" id="insertTemplateBtn">
+                    <i class="fas fa-magic me-1"></i><span class="d-none d-sm-inline">Process with AI</span><span class="d-inline d-sm-none">AI</span>
                   </button>
-                  <button class="btn btn-outline-secondary btn-sm" id="clearMessageBtn">
+                  <button class="btn btn-outline-secondary btn-sm" id="clearMessageBtn" title="Clear Message">
                     <i class="fas fa-eraser"></i>
                   </button>
-                  <button class="btn btn-outline-info btn-sm" id="previewMessageBtn">
+                  <button class="btn btn-outline-info btn-sm" id="previewMessageBtn" title="Preview Message">
                     <i class="fas fa-eye"></i>
                   </button>
                 </div>
@@ -136,7 +136,7 @@
                 </div>
               </div>
               
-              <textarea class="form-control" id="customMessage" rows="10" placeholder="Start typing your message or select a template above, then click 'Insert Template'..." 
+              <textarea class="form-control" id="customMessage" rows="10" placeholder="Write your message here... (You can select a template above OR write your own message, then click 'Process with AI')" 
                         data-autocomplete="true" data-suggestions="Hey,Hello,Hi there,Welcome,Thank you,Best regards,Looking forward,Let me know,Please,Thanks"></textarea>
               <div class="d-flex justify-content-between mt-2">
                 <small class="text-muted">Characters: <span id="charCount">0</span></small>
@@ -144,19 +144,20 @@
               </div>
             </div>
 
-            <!-- Telegram Link - Step 3 -->
+            <!-- Configure & Prepare -->
             <div class="mb-4">
-              <h6 class="mb-3">Step 3: Configure & Prepare</h6>
-              <div class="row">
-                <div class="col-md-8">
+              <h6 class="mb-3">Configure & Prepare</h6>
+              <div class="row g-3">
+                <div class="col-12 col-md-8">
                   <label for="telegramLink" class="form-label fw-bold">Telegram Link</label>
                   <input type="url" class="form-control" id="telegramLink" placeholder="https://t.me/yourchannel" 
                   value="https://t.me/tradetabofficial">
                 </div>
-                <div class="col-md-4 d-flex align-items-end">
+                <div class="col-12 col-md-4">
                   <button class="btn btn-primary w-100" id="prepareBroadcast">
                     <i class="fas fa-cog me-1"></i>
-                    Prepare Broadcast
+                    <span class="d-none d-sm-inline">Prepare Broadcast</span>
+                    <span class="d-inline d-sm-none">Prepare</span>
                   </button>
                 </div>
               </div>
@@ -183,26 +184,30 @@
         <!-- Recipients Selection - Compact -->
         <div class="card">
           <div class="card-header">
-            <div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+            <div class="d-flex flex-column flex-lg-row justify-content-between align-items-start align-items-lg-center gap-3">
               <h5 class="mb-0">
                 <i class="fas fa-users me-2"></i>
                 Recipients
               </h5>
-              <div class="d-flex gap-2">
-                <input type="text" class="form-control form-control-sm" id="searchContacts" placeholder="Search..." style="width: 150px;">
-                <select class="form-select form-select-sm" id="statusFilter" style="width: 100px;">
-                  <option value="">All</option>
-                  <option value="online">Online</option>
-                  <option value="offline">Offline</option>
-                  <option value="pending">Pending</option>
-                </select>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="checkbox" id="selectAllContacts">
-                  <label class="form-check-label" for="selectAllContacts">All</label>
+              <div class="d-flex flex-column flex-sm-row gap-2 w-100 w-lg-auto">
+                <div class="d-flex gap-2">
+                  <input type="text" class="form-control form-control-sm" id="searchContacts" placeholder="Search..." style="min-width: 120px;">
+                  <select class="form-select form-select-sm" id="statusFilter" style="min-width: 80px;">
+                    <option value="">All</option>
+                    <option value="online">Online</option>
+                    <option value="offline">Offline</option>
+                    <option value="pending">Pending</option>
+                  </select>
                 </div>
-                <div class="form-check form-check-inline">
-                  <input class="form-check-input" type="checkbox" id="onlineContactsOnly">
-                  <label class="form-check-label" for="onlineContactsOnly">Online</label>
+                <div class="d-flex gap-3">
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="selectAllContacts">
+                    <label class="form-check-label" for="selectAllContacts">All</label>
+                  </div>
+                  <div class="form-check form-check-inline">
+                    <input class="form-check-input" type="checkbox" id="onlineContactsOnly">
+                    <label class="form-check-label" for="onlineContactsOnly">Online</label>
+                  </div>
                 </div>
               </div>
             </div>
@@ -263,16 +268,16 @@
               <div class="col-4">
                 <h6 class="text-success mb-1" id="sentMessages">0</h6>
                 <small class="text-muted">Sent</small>
-              </div>
+            </div>
               <div class="col-4">
                 <h6 class="text-warning mb-1" id="conversionRate">0%</h6>
                 <small class="text-muted">Rate</small>
               </div>
             </div>
           </div>
-        </div>
-      </div>
-    </div>
+              </div>
+            </div>
+          </div>
   </div>
 
   <!-- Toast Container -->
@@ -430,14 +435,19 @@
         const hasTemplate = this.selectedTemplate !== null;
         const hasContent = $('#customMessage').val().trim().length > 0;
         
-        // Enable if template is selected, regardless of content
-        $('#insertTemplateBtn').prop('disabled', !hasTemplate);
+        // Enable if either template is selected OR user has written content
+        const canProcess = hasTemplate || hasContent;
+        $('#insertTemplateBtn').prop('disabled', !canProcess);
         
         // Update button text based on state
         if (hasTemplate && hasContent) {
-          $('#insertTemplateBtn').html('<i class="fas fa-magic me-1"></i>Process Template');
+          $('#insertTemplateBtn').html('<i class="fas fa-magic me-1"></i>Process Template + Message');
         } else if (hasTemplate) {
-          $('#insertTemplateBtn').html('<i class="fas fa-magic me-1"></i>Insert Template');
+          $('#insertTemplateBtn').html('<i class="fas fa-magic me-1"></i>Process Template');
+        } else if (hasContent) {
+          $('#insertTemplateBtn').html('<i class="fas fa-magic me-1"></i>Process Message');
+        } else {
+          $('#insertTemplateBtn').html('<i class="fas fa-magic me-1"></i>Process with AI');
         }
       }
 
@@ -718,29 +728,44 @@
       }
 
       async insertTemplate() {
-        if (!this.selectedTemplate) {
-          this.showToast('Please select a template first', 'warning');
+        const hasTemplate = this.selectedTemplate !== null;
+        const hasContent = $('#customMessage').val().trim().length > 0;
+        
+        if (!hasTemplate && !hasContent) {
+          this.showToast('Please select a template or write a message first', 'warning');
           return;
         }
 
         try {
           $('#insertTemplateBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>Processing...');
           
-          // Get the template content
-          let templateContent = '';
-          if (this.customTemplates && this.customTemplates[this.selectedTemplate]) {
-            templateContent = this.customTemplates[this.selectedTemplate].content;
-          } else if (this.messageTemplates[this.selectedTemplate]) {
-            templateContent = this.messageTemplates[this.selectedTemplate];
+          let contentToProcess = '';
+          
+          if (hasTemplate) {
+            // Get the template content
+            if (this.customTemplates && this.customTemplates[this.selectedTemplate]) {
+              contentToProcess = this.customTemplates[this.selectedTemplate].content;
+            } else if (this.messageTemplates[this.selectedTemplate]) {
+              contentToProcess = this.messageTemplates[this.selectedTemplate];
+            }
+            
+            // If user also wrote content, combine them
+            if (hasContent) {
+              const userContent = $('#customMessage').val().trim();
+              contentToProcess = `${contentToProcess}\n\n${userContent}`;
+            }
+          } else {
+            // User wrote their own message
+            contentToProcess = $('#customMessage').val().trim();
           }
 
-          // Send the template to the API for AI generation
+          // Send the content to the API for AI generation
           const response = await $.ajax({
             url: this.API_ENDPOINTS.createMessage,
             type: 'POST',
             contentType: 'application/json',
             data: JSON.stringify({
-              "template": templateContent
+              "template": contentToProcess
             })
           });
 
@@ -748,8 +773,8 @@
           if (response && response.message) {
             $('#customMessage').val(response.message);
           } else {
-            // Fallback to original template if no AI response
-            $('#customMessage').val(templateContent);
+            // Fallback to original content if no AI response
+            $('#customMessage').val(contentToProcess);
           }
 
           this.updateCharCount();
@@ -757,14 +782,12 @@
           $('#prepareBroadcast').prop('disabled', false);
           $('#sendBroadcast').prop('disabled', true);
           
-          this.showToast('Template processed and inserted successfully!', 'success');
+          this.showToast('Content processed with AI successfully!', 'success');
           
         } catch (error) {
-          this.showToast('Error processing template: ' + error.message, 'error');
-          // Fallback to original template
-          this.loadMessageTemplate();
+          this.showToast('Error processing content: ' + error.message, 'error');
         } finally {
-          $('#insertTemplateBtn').prop('disabled', false).html('<i class="fas fa-magic me-1"></i>Insert Template');
+          this.updateInsertTemplateButton();
         }
       }
 
@@ -772,9 +795,9 @@
         $('#customMessage').val('');
         this.selectedTemplate = null;
         $('.template-btn').removeClass('active');
-        $('#insertTemplateBtn').prop('disabled', true);
         this.hideTemplatePreview();
         this.updateCharCount();
+        this.updateInsertTemplateButton();
         this.isPrepared = false;
         $('#prepareBroadcast').prop('disabled', false);
         $('#sendBroadcast').prop('disabled', true);
