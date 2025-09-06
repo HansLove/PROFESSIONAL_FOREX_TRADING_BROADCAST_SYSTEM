@@ -432,6 +432,66 @@ body {
   color: white;
 }
 
+/* Template Preview */
+#templatePreview {
+  border-left: 4px solid var(--accent);
+  background: rgba(59, 130, 246, 0.05);
+  border-radius: 8px;
+  margin-bottom: 1rem;
+}
+
+#templatePreviewContent {
+  font-family: 'Courier New', monospace;
+  background: rgba(255, 255, 255, 0.7);
+  padding: 0.5rem;
+  border-radius: 4px;
+  white-space: pre-wrap;
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+/* Enhanced Message Input */
+#customMessage {
+  transition: all 0.3s ease;
+  border: 2px solid var(--border);
+}
+
+#customMessage:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+  transform: translateY(-1px);
+}
+
+/* Auto-complete suggestions */
+.autocomplete-suggestions {
+  position: absolute;
+  background: white;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  box-shadow: var(--shadow-hover);
+  max-height: 200px;
+  overflow-y: auto;
+  z-index: 1000;
+  width: 100%;
+}
+
+.autocomplete-suggestion {
+  padding: 0.5rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border);
+  transition: background-color 0.2s ease;
+}
+
+.autocomplete-suggestion:hover,
+.autocomplete-suggestion.active {
+  background: var(--accent);
+  color: white;
+}
+
+.autocomplete-suggestion:last-child {
+  border-bottom: none;
+}
+
 /* Enhanced Message Actions */
 .message-actions {
   display: flex;

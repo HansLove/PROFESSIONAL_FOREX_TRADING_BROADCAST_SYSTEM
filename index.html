@@ -124,7 +124,20 @@
                   </button>
                 </div>
               </div>
-              <textarea class="form-control" id="customMessage" rows="10" placeholder="Start typing your message or select a template above, then click 'Insert Template'..."></textarea>
+              
+              <!-- Template Preview -->
+              <div id="templatePreview" class="alert alert-info mb-3" style="display: none;">
+                <div class="d-flex justify-content-between align-items-start">
+                  <div>
+                    <strong><i class="fas fa-eye me-1"></i>Template Preview:</strong>
+                    <div id="templatePreviewContent" class="mt-1 small"></div>
+                  </div>
+                  <button type="button" class="btn-close" id="closePreview"></button>
+                </div>
+              </div>
+              
+              <textarea class="form-control" id="customMessage" rows="10" placeholder="Start typing your message or select a template above, then click 'Insert Template'..." 
+                        data-autocomplete="true" data-suggestions="Hey,Hello,Hi there,Welcome,Thank you,Best regards,Looking forward,Let me know,Please,Thanks"></textarea>
               <div class="d-flex justify-content-between mt-2">
                 <small class="text-muted">Characters: <span id="charCount">0</span></small>
                 <small class="text-muted">Lines: <span id="lineCount">1</span></small>
@@ -230,8 +243,8 @@
                 Add
               </button>
             </form>
-          </div>
-        </div>
+      </div>
+    </div>
 
         <!-- Quick Stats - Compact -->
         <div class="card">
@@ -336,10 +349,8 @@
           this.isPrepared = false;
           $('#prepareBroadcast').prop('disabled', false);
           $('#sendBroadcast').prop('disabled', true);
-          // Disable Insert Template if user is typing manually
-          if ($('#customMessage').val().trim().length > 0) {
-            $('#insertTemplateBtn').prop('disabled', true);
-          }
+          // Keep Insert Template enabled if a template is selected
+          this.updateInsertTemplateButton();
         });
 
         // Template selection - NEW BUTTONS
@@ -352,6 +363,9 @@
         $('#createTemplateBtn').on('click', () => this.showTemplateCreation());
         $('#saveTemplateBtn').on('click', () => this.saveTemplate());
         $('#cancelTemplateBtn').on('click', () => this.hideTemplateCreation());
+        
+        // Template preview
+        $('#closePreview').on('click', () => this.hideTemplatePreview());
 
         // Pagination
         $(document).on('click', '.pagination .page-link', (e) => {
@@ -369,10 +383,62 @@
         $(`.template-btn[data-template="${template}"]`).addClass('active');
         
         this.selectedTemplate = template;
-        this.loadMessageTemplate();
+        this.showTemplatePreview();
+        this.updateInsertTemplateButton();
+      }
+
+      showTemplatePreview() {
+        if (this.selectedTemplate) {
+          let content = '';
+          
+          // Check if it's a custom template
+          if (this.customTemplates && this.customTemplates[this.selectedTemplate]) {
+            content = this.customTemplates[this.selectedTemplate].content;
+          } else if (this.messageTemplates[this.selectedTemplate]) {
+            content = this.messageTemplates[this.selectedTemplate];
+          }
+          
+          if (content) {
+            // Show preview in the preview area
+            $('#templatePreviewContent').text(content);
+            $('#templatePreview').slideDown(300);
+            this.showToast(`Template "${this.getTemplateName()}" selected. Click "Insert Template" to process with AI.`, 'info');
+          }
+        }
+      }
+
+      hideTemplatePreview() {
+        $('#templatePreview').slideUp(300);
+      }
+
+      getTemplateName() {
+        if (this.customTemplates && this.customTemplates[this.selectedTemplate]) {
+          return this.customTemplates[this.selectedTemplate].name;
+        }
         
-        // Enable Insert Template button
-        $('#insertTemplateBtn').prop('disabled', false);
+        const templateNames = {
+          realNumber: 'Real Number',
+          privacyRequest: 'Privacy Request',
+          telegramCTA: 'Telegram CTA',
+          fullStrategy: 'Full Strategy'
+        };
+        
+        return templateNames[this.selectedTemplate] || 'Template';
+      }
+
+      updateInsertTemplateButton() {
+        const hasTemplate = this.selectedTemplate !== null;
+        const hasContent = $('#customMessage').val().trim().length > 0;
+        
+        // Enable if template is selected, regardless of content
+        $('#insertTemplateBtn').prop('disabled', !hasTemplate);
+        
+        // Update button text based on state
+        if (hasTemplate && hasContent) {
+          $('#insertTemplateBtn').html('<i class="fas fa-magic me-1"></i>Process Template');
+        } else if (hasTemplate) {
+          $('#insertTemplateBtn').html('<i class="fas fa-magic me-1"></i>Insert Template');
+        }
       }
 
       loadMessageTemplates() {
@@ -707,6 +773,7 @@
         this.selectedTemplate = null;
         $('.template-btn').removeClass('active');
         $('#insertTemplateBtn').prop('disabled', true);
+        this.hideTemplatePreview();
         this.updateCharCount();
         this.isPrepared = false;
         $('#prepareBroadcast').prop('disabled', false);
