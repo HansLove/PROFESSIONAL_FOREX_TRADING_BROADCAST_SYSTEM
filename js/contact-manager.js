@@ -41,23 +41,38 @@ class ContactManager {
 
   /**
    * Process numbers data from the new API
-   * @param {Array} numbers - Raw numbers data from API
+   * @param {Object} response - API response with numbers array
    * @returns {Array} Processed contact objects
    */
-  processNumbersData(numbers) {
-    if (!Array.isArray(numbers)) {
-      console.warn('Numbers data is not an array:', numbers);
+  processNumbersData(response) {
+    if (!response || !response.numbers || !Array.isArray(response.numbers)) {
+      console.warn('Invalid numbers data structure:', response);
       return [];
     }
 
-    return numbers.map((number, index) => ({
-      id: number.id || `num_${index}_${Date.now()}`,
-      userName: number.name || number.userName || `Contact ${index + 1}`,
-      phone: number.phone || number.number || number.contact || 'Unknown',
-      status: this.apiService.getRandomStatus(),
+    return response.numbers.map((number, index) => ({
+      id: `num_${index}_${Date.now()}`,
+      userName: number.name || `Contact ${index + 1}`,
+      phone: number.number || 'Unknown',
+      status: this.getContactStatus(number),
       selected: false,
-      source: 'numbers_api'
+      source: 'numbers_api',
+      interview: number.interview || false,
+      subscription: number.suscription || false,
+      active: number.active || false
     }));
+  }
+
+  /**
+   * Determine contact status based on API data
+   * @param {Object} number - Number object from API
+   * @returns {string} Contact status
+   */
+  getContactStatus(number) {
+    if (!number.active) return 'offline';
+    if (number.interview) return 'online';
+    if (number.suscription) return 'online';
+    return 'pending';
   }
 
   /**
@@ -107,7 +122,9 @@ class ContactManager {
           <div class="flex-grow-1">
             <div class="fw-bold text-primary small">${contact.userName}</div>
             <div class="text-secondary small">${contact.phone}</div>
-            ${contact.source === 'numbers_api' ? '<small class="text-info">API</small>' : ''}
+            <div class="d-flex gap-1 mt-1">
+              ${this.getContactBadges(contact)}
+            </div>
           </div>
         </div>
       </div>
@@ -117,6 +134,33 @@ class ContactManager {
     this.generatePagination();
     this.bindContactCheckboxes();
     this.updateQuickStats();
+  }
+
+  /**
+   * Get contact status badges
+   * @param {Object} contact - Contact object
+   * @returns {string} HTML for badges
+   */
+  getContactBadges(contact) {
+    let badges = [];
+    
+    if (contact.source === 'numbers_api') {
+      badges.push('<span class="badge bg-info badge-sm">API</span>');
+    }
+    
+    if (contact.interview) {
+      badges.push('<span class="badge bg-success badge-sm">Interviewed</span>');
+    }
+    
+    if (contact.subscription) {
+      badges.push('<span class="badge bg-primary badge-sm">Subscribed</span>');
+    }
+    
+    if (!contact.active) {
+      badges.push('<span class="badge bg-danger badge-sm">Inactive</span>');
+    }
+    
+    return badges.join('');
   }
 
   /**
@@ -179,6 +223,39 @@ class ContactManager {
   }
 
   /**
+   * Get contacts by status
+   * @param {string} status - Status to filter by
+   * @returns {Array} Filtered contacts
+   */
+  getContactsByStatus(status) {
+    return this.contacts.filter(contact => contact.status === status);
+  }
+
+  /**
+   * Get active contacts
+   * @returns {Array} Active contacts
+   */
+  getActiveContacts() {
+    return this.contacts.filter(contact => contact.active);
+  }
+
+  /**
+   * Get interviewed contacts
+   * @returns {Array} Interviewed contacts
+   */
+  getInterviewedContacts() {
+    return this.contacts.filter(contact => contact.interview);
+  }
+
+  /**
+   * Get subscribed contacts
+   * @returns {Array} Subscribed contacts
+   */
+  getSubscribedContacts() {
+    return this.contacts.filter(contact => contact.subscription);
+  }
+
+  /**
    * Toggle select all contacts
    */
   toggleSelectAll() {
@@ -232,9 +309,25 @@ class ContactManager {
    * Update main stats display
    */
   updateStats() {
-    $('#totalContacts').text(this.contacts.length);
-    $('#sentMessages').text(Math.floor(Math.random() * 500) + 200);
-    $('#conversionRate').text((Math.random() * 20 + 10).toFixed(1) + '%');
+    const totalContacts = this.contacts.length;
+    const activeContacts = this.getActiveContacts().length;
+    const interviewedContacts = this.getInterviewedContacts().length;
+    const subscribedContacts = this.getSubscribedContacts().length;
+    
+    $('#totalContacts').text(totalContacts);
+    $('#sentMessages').text(interviewedContacts);
+    $('#conversionRate').text(subscribedContacts > 0 ? ((subscribedContacts / totalContacts) * 100).toFixed(1) + '%' : '0%');
+    
+    // Update additional stats if elements exist
+    if ($('#activeContacts').length) {
+      $('#activeContacts').text(activeContacts);
+    }
+    if ($('#interviewedContacts').length) {
+      $('#interviewedContacts').text(interviewedContacts);
+    }
+    if ($('#subscribedContacts').length) {
+      $('#subscribedContacts').text(subscribedContacts);
+    }
   }
 
   /**

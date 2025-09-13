@@ -631,6 +631,40 @@ body {
   font-weight: 500;
 }
 
+/* Contact Badges */
+.badge-sm {
+  font-size: 0.65rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 6px;
+  font-weight: 500;
+}
+
+.badge.bg-info {
+  background-color: #17a2b8 !important;
+}
+
+.badge.bg-success {
+  background-color: #28a745 !important;
+}
+
+.badge.bg-primary {
+  background-color: #007bff !important;
+}
+
+.badge.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+/* Enhanced Contact Items with Badges */
+.contact-item-compact .d-flex.gap-1 {
+  gap: 0.25rem !important;
+}
+
+.contact-item-compact .badge {
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
+}
+
 /* Enhanced Form Controls */
 .form-control:focus, .form-select:focus {
   background: var(--bg-secondary);

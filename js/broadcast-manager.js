@@ -61,12 +61,28 @@ class BroadcastManager {
       return;
     }
 
+    const message = this.templateManager.getCurrentMessage();
+    if (!message) {
+      this.showToast('No message to send', 'warning');
+      return;
+    }
+
     try {
       this.isBroadcasting = true;
       $('#sendBroadcast').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>Sending...');
 
-      // Send the message to the webhook
-      await this.apiService.sendMessage();
+      // Extract phone numbers from selected contacts
+      const phoneNumbers = selectedContacts.map(contact => contact.phone);
+
+      // Debug information
+      console.log('Sending broadcast with:', {
+        numbers: phoneNumbers,
+        template: message,
+        recipientCount: selectedContacts.length
+      });
+
+      // Send the message with numbers and template
+      await this.apiService.sendMessage(phoneNumbers, message);
 
       this.showToast(`Broadcast sent to ${selectedContacts.length} recipients successfully!`, 'success');
       this.contactManager.updateStats();

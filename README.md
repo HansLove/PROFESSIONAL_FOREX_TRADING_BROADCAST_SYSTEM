@@ -99,9 +99,17 @@ The application now integrates with the new numbers API:
 - `id`: Unique identifier
 - `userName`: Contact name (from API or generated)
 - `phone`: Phone number
-- `status`: Random status (online/offline/pending)
+- `status`: Smart status based on API data (online/offline/pending)
 - `selected`: Selection state
 - `source`: API source indicator
+- `interview`: Interview status from API
+- `subscription`: Subscription status from API
+- `active`: Active status from API
+
+**Status Logic:**
+- `offline`: Contact is not active
+- `online`: Contact is active and has been interviewed or subscribed
+- `pending`: Contact is active but hasn't been interviewed or subscribed
 
 ## Usage
 
