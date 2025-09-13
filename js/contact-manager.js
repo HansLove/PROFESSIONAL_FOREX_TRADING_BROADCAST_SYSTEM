@@ -88,7 +88,7 @@ class ContactManager {
     }
 
     try {
-      const newContact = { userName: name, phone };
+      const newContact = { name: name, number: phone };
       await this.apiService.addContact(newContact);
       
       // Clear form
