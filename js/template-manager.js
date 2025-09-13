@@ -27,6 +27,7 @@ class TemplateManager {
     $('.template-btn').on('click', (e) => {
       const template = $(e.currentTarget).data('template');
       this.selectTemplate(template);
+      
     });
 
     // Template creation
@@ -79,7 +80,23 @@ class TemplateManager {
     $(`.template-btn[data-template="${template}"]`).addClass('active');
     
     this.selectedTemplate = template;
-    this.showTemplatePreview();
+    
+    // Get template content and insert into textarea
+    let content = '';
+    if (this.customTemplates && this.customTemplates[template]) {
+      content = this.customTemplates[template].content;
+    } else if (this.messageTemplates[template]) {
+      content = this.messageTemplates[template];
+    }
+    
+    if (content) {
+      // Insert template content into textarea
+      $('#customMessage').val(content);
+      this.updateCharCount();
+      this.showToast(`Template "${this.getTemplateName(template)}" inserted into message`, 'success');
+    }
+    
+    this.hideTemplatePreview();
     this.updateInsertTemplateButton();
   }
 
@@ -115,11 +132,14 @@ class TemplateManager {
 
   /**
    * Get template name
+   * @param {string} template - Template identifier (optional, uses selectedTemplate if not provided)
    * @returns {string} Template name
    */
-  getTemplateName() {
-    if (this.customTemplates && this.customTemplates[this.selectedTemplate]) {
-      return this.customTemplates[this.selectedTemplate].name;
+  getTemplateName(template = null) {
+    const templateId = template || this.selectedTemplate;
+    
+    if (this.customTemplates && this.customTemplates[templateId]) {
+      return this.customTemplates[templateId].name;
     }
     
     const templateNames = {
@@ -129,69 +149,28 @@ class TemplateManager {
       fullStrategy: 'Full Strategy'
     };
     
-    return templateNames[this.selectedTemplate] || 'Template';
+    return templateNames[templateId] || 'Template';
   }
 
-  /**
-   * Update insert template button state
-   */
-  updateInsertTemplateButton() {
-    const hasTemplate = this.selectedTemplate !== null;
-    const hasContent = $('#customMessage').val().trim().length > 0;
-    
-    // Enable if either template is selected OR user has written content
-    const canProcess = hasTemplate || hasContent;
-    $('#insertTemplateBtn').prop('disabled', !canProcess);
-    
-    // Update button text based on state
-    if (hasTemplate && hasContent) {
-      $('#insertTemplateBtn').html('<i class="fas fa-magic me-1"></i>Process Template + Message');
-    } else if (hasTemplate) {
-      $('#insertTemplateBtn').html('<i class="fas fa-magic me-1"></i>Process Template');
-    } else if (hasContent) {
-      $('#insertTemplateBtn').html('<i class="fas fa-magic me-1"></i>Process Message');
-    } else {
-      $('#insertTemplateBtn').html('<i class="fas fa-magic me-1"></i>Process with AI');
-    }
-  }
 
   /**
-   * Insert and process template with AI
+   * Process message content with AI
    */
   async insertTemplate() {
-    const hasTemplate = this.selectedTemplate !== null;
-    const hasContent = $('#customMessage').val().trim().length > 0;
+    const content = $('#customMessage').val().trim();
     
-    if (!hasTemplate && !hasContent) {
-      this.showToast('Please select a template or write a message first', 'warning');
+    if (!content) {
+      this.showToast('Please write a message first', 'warning');
       return;
     }
 
     try {
       $('#insertTemplateBtn').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>Processing...');
       
-      let contentToProcess = '';
+      // Process the content that's already in the textarea
+      // TODO: Add AI processing logic here
+      // For now, just show success message
       
-      if (hasTemplate) {
-        // Get the template content
-        if (this.customTemplates && this.customTemplates[this.selectedTemplate]) {
-          contentToProcess = this.customTemplates[this.selectedTemplate].content;
-        } else if (this.messageTemplates[this.selectedTemplate]) {
-          contentToProcess = this.messageTemplates[this.selectedTemplate];
-        }
-        
-        // If user also wrote content, combine them
-        if (hasContent) {
-          const userContent = $('#customMessage').val().trim();
-          contentToProcess = `${contentToProcess}\n\n${userContent}`;
-        }
-      } else {
-        // User wrote their own message
-        contentToProcess = $('#customMessage').val().trim();
-      }
-
-  
-
       this.updateCharCount();
       this.showToast('Content processed with AI successfully!', 'success');
       
@@ -335,6 +314,23 @@ class TemplateManager {
     
     $('#charCount').text(charCount);
     $('#lineCount').text(lineCount);
+  }
+
+  /**
+   * Update insert template button state and text
+   */
+  updateInsertTemplateButton() {
+    const hasContent = $('#customMessage').val().trim().length > 0;
+    
+    // Enable button if there's content to process
+    $('#insertTemplateBtn').prop('disabled', !hasContent);
+    
+    // Update button text based on state
+    if (hasContent) {
+      $('#insertTemplateBtn').html('<i class="fas fa-magic me-1"></i><span class="d-none d-sm-inline">Process with AI</span><span class="d-inline d-sm-none">AI</span>');
+    } else {
+      $('#insertTemplateBtn').html('<i class="fas fa-magic me-1"></i><span class="d-none d-sm-inline">Process with AI</span><span class="d-inline d-sm-none">AI</span>');
+    }
   }
 
   /**
