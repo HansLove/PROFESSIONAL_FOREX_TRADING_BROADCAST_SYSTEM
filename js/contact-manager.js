@@ -104,15 +104,16 @@ class ContactManager {
   }
 
   /**
-   * Display contacts in the UI
+   * Display contacts in the UI - Mobile Optimized
    */
   displayContacts() {
     const start = (this.currentPage - 1) * this.contactsPerPage;
     const end = start + this.contactsPerPage;
     const pageContacts = this.filteredContacts.slice(start, end);
+    const isMobile = window.innerWidth <= 768;
 
     const contactsHtml = pageContacts.map(contact => `
-      <div class="col-md-6 col-lg-4">
+      <div class="col-12 col-sm-6 col-md-4 col-lg-3">
         <div class="contact-item-compact d-flex align-items-center p-2 border rounded">
           <div class="form-check me-2">
             <input class="form-check-input contact-checkbox" type="checkbox" 
@@ -120,9 +121,9 @@ class ContactManager {
           </div>
           <span class="status-indicator status-${contact.status} me-2"></span>
           <div class="flex-grow-1">
-            <div class="fw-bold text-primary small">${contact.userName}</div>
-            <div class="text-secondary small">${contact.phone}</div>
-            <div class="d-flex gap-1 mt-1">
+            <div class="fw-bold text-primary ${isMobile ? 'small' : ''}">${contact.userName}</div>
+            <div class="text-secondary ${isMobile ? 'small' : ''}">${contact.phone}</div>
+            <div class="d-flex flex-wrap gap-1 mt-1">
               ${this.getContactBadges(contact)}
             </div>
           </div>
@@ -164,18 +165,67 @@ class ContactManager {
   }
 
   /**
-   * Generate pagination controls
+   * Generate pagination controls - Mobile Optimized
    */
   generatePagination() {
     const totalPages = Math.ceil(this.filteredContacts.length / this.contactsPerPage);
+    const isMobile = window.innerWidth <= 768;
     let paginationHtml = '';
 
-    for (let i = 1; i <= totalPages; i++) {
-      paginationHtml += `
-        <li class="page-item ${i === this.currentPage ? 'active' : ''}">
-          <a class="page-link" href="#">${i}</a>
-        </li>
-      `;
+    if (totalPages <= 1) {
+      $('#pagination').html('');
+      return;
+    }
+
+    // Mobile pagination - show fewer pages
+    if (isMobile) {
+      const maxVisible = 5;
+      let startPage = Math.max(1, this.currentPage - 2);
+      let endPage = Math.min(totalPages, startPage + maxVisible - 1);
+      
+      if (endPage - startPage < maxVisible - 1) {
+        startPage = Math.max(1, endPage - maxVisible + 1);
+      }
+
+      // Previous button
+      if (this.currentPage > 1) {
+        paginationHtml += `
+          <li class="page-item">
+            <a class="page-link" href="#" data-page="${this.currentPage - 1}">
+              <i class="fas fa-chevron-left"></i>
+            </a>
+          </li>
+        `;
+      }
+
+      // Page numbers
+      for (let i = startPage; i <= endPage; i++) {
+        paginationHtml += `
+          <li class="page-item ${i === this.currentPage ? 'active' : ''}">
+            <a class="page-link" href="#" data-page="${i}">${i}</a>
+          </li>
+        `;
+      }
+
+      // Next button
+      if (this.currentPage < totalPages) {
+        paginationHtml += `
+          <li class="page-item">
+            <a class="page-link" href="#" data-page="${this.currentPage + 1}">
+              <i class="fas fa-chevron-right"></i>
+            </a>
+          </li>
+        `;
+      }
+    } else {
+      // Desktop pagination - show all pages
+      for (let i = 1; i <= totalPages; i++) {
+        paginationHtml += `
+          <li class="page-item ${i === this.currentPage ? 'active' : ''}">
+            <a class="page-link" href="#" data-page="${i}">${i}</a>
+          </li>
+        `;
+      }
     }
 
     $('#pagination').html(paginationHtml);
@@ -205,21 +255,24 @@ class ContactManager {
   }
 
   /**
-   * Filter contacts based on search and status
+   * Filter contacts based on search and status - Performance Optimized
    */
   filterContacts() {
     const searchTerm = $('#searchContacts').val().toLowerCase();
     const statusFilter = $('#statusFilter').val();
 
-    this.filteredContacts = this.contacts.filter(contact => {
-      const matchesSearch = contact.userName.toLowerCase().includes(searchTerm) ||
-                          contact.phone.includes(searchTerm);
-      const matchesStatus = !statusFilter || contact.status === statusFilter;
-      return matchesSearch && matchesStatus;
-    });
+    // Performance optimization: Use requestAnimationFrame for smooth filtering
+    requestAnimationFrame(() => {
+      this.filteredContacts = this.contacts.filter(contact => {
+        const matchesSearch = contact.userName.toLowerCase().includes(searchTerm) ||
+                            contact.phone.includes(searchTerm);
+        const matchesStatus = !statusFilter || contact.status === statusFilter;
+        return matchesSearch && matchesStatus;
+      });
 
-    this.currentPage = 1;
-    this.displayContacts();
+      this.currentPage = 1;
+      this.displayContacts();
+    });
   }
 
   /**
@@ -341,18 +394,21 @@ class ContactManager {
   }
 
   /**
-   * Show toast notification
+   * Show toast notification - Mobile Optimized
    * @param {string} message - Toast message
    * @param {string} type - Toast type
    */
   showToast(message, type = 'info') {
+    const isMobile = window.innerWidth <= 768;
+    const toastId = 'toast_' + Date.now();
+    
     const toastHtml = `
-      <div class="toast show" role="alert">
+      <div class="toast show" id="${toastId}" role="alert">
         <div class="toast-header bg-${type === 'error' ? 'danger' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : 'info'} text-white">
           <strong class="me-auto">${type.charAt(0).toUpperCase() + type.slice(1)}</strong>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
         </div>
-        <div class="toast-body">
+        <div class="toast-body ${isMobile ? 'small' : ''}">
           ${message}
         </div>
       </div>
@@ -360,9 +416,14 @@ class ContactManager {
 
     $('.toast-container').append(toastHtml);
     
+    // Mobile-specific auto-dismiss timing
+    const dismissTime = isMobile ? 3000 : 5000;
+    
     setTimeout(() => {
-      $('.toast-container .toast').remove();
-    }, 5000);
+      $(`#${toastId}`).fadeOut(300, function() {
+        $(this).remove();
+      });
+    }, dismissTime);
   }
 }
 

@@ -43,10 +43,15 @@ class TemplateManager {
     $('#clearMessageBtn').on('click', () => this.clearMessage());
     $('#previewMessageBtn').on('click', () => this.previewMessage());
 
-    // Message textarea
+    // Message textarea - Performance Optimized
+    let inputTimeout;
     $('#customMessage').on('input', () => {
-      this.updateCharCount();
-      this.updateInsertTemplateButton();
+      // Debounce input events for better performance
+      clearTimeout(inputTimeout);
+      inputTimeout = setTimeout(() => {
+        this.updateCharCount();
+        this.updateInsertTemplateButton();
+      }, 150);
     });
 
     // Telegram link
@@ -69,7 +74,7 @@ class TemplateManager {
   }
 
   /**
-   * Select a template
+   * Select a template - Mobile Optimized
    * @param {string} template - Template identifier
    */
   selectTemplate(template) {
@@ -93,7 +98,25 @@ class TemplateManager {
       // Insert template content into textarea
       $('#customMessage').val(content);
       this.updateCharCount();
-      this.showToast(`Template "${this.getTemplateName(template)}" inserted into message`, 'success');
+      
+      // Mobile-specific feedback
+      const isMobile = window.innerWidth <= 768;
+      const templateName = this.getTemplateName(template);
+      const message = isMobile 
+        ? `"${templateName}" loaded` 
+        : `Template "${templateName}" inserted into message`;
+      
+      this.showToast(message, 'success');
+      
+      // Scroll to message area on mobile
+      if (isMobile) {
+        setTimeout(() => {
+          $('#customMessage')[0].scrollIntoView({ 
+            behavior: 'smooth', 
+            block: 'center' 
+          });
+        }, 300);
+      }
     }
     
     this.hideTemplatePreview();
@@ -305,15 +328,40 @@ class TemplateManager {
   }
 
   /**
-   * Update character count
+   * Update character count - Mobile Optimized
    */
   updateCharCount() {
     const text = $('#customMessage').val();
     const charCount = text.length;
     const lineCount = text.split('\n').length;
+    const isMobile = window.innerWidth <= 768;
     
     $('#charCount').text(charCount);
     $('#lineCount').text(lineCount);
+    
+    // Mobile-specific character count warnings
+    if (isMobile) {
+      const charCountElement = $('#charCount');
+      const lineCountElement = $('#lineCount');
+      
+      // Remove previous warning classes
+      charCountElement.removeClass('text-warning text-danger');
+      lineCountElement.removeClass('text-warning text-danger');
+      
+      // Add warning classes for mobile
+      if (charCount > 1000) {
+        charCountElement.addClass('text-warning');
+      }
+      if (charCount > 2000) {
+        charCountElement.addClass('text-danger');
+      }
+      if (lineCount > 20) {
+        lineCountElement.addClass('text-warning');
+      }
+      if (lineCount > 40) {
+        lineCountElement.addClass('text-danger');
+      }
+    }
   }
 
   /**
@@ -351,18 +399,21 @@ class TemplateManager {
   }
 
   /**
-   * Show toast notification
+   * Show toast notification - Mobile Optimized
    * @param {string} message - Toast message
    * @param {string} type - Toast type
    */
   showToast(message, type = 'info') {
+    const isMobile = window.innerWidth <= 768;
+    const toastId = 'toast_' + Date.now();
+    
     const toastHtml = `
-      <div class="toast show" role="alert">
+      <div class="toast show" id="${toastId}" role="alert">
         <div class="toast-header bg-${type === 'error' ? 'danger' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : 'info'} text-white">
           <strong class="me-auto">${type.charAt(0).toUpperCase() + type.slice(1)}</strong>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
         </div>
-        <div class="toast-body">
+        <div class="toast-body ${isMobile ? 'small' : ''}">
           ${message}
         </div>
       </div>
@@ -370,9 +421,14 @@ class TemplateManager {
 
     $('.toast-container').append(toastHtml);
     
+    // Mobile-specific auto-dismiss timing
+    const dismissTime = isMobile ? 3000 : 5000;
+    
     setTimeout(() => {
-      $('.toast-container .toast').remove();
-    }, 5000);
+      $(`#${toastId}`).fadeOut(300, function() {
+        $(this).remove();
+      });
+    }, dismissTime);
   }
 }
 
