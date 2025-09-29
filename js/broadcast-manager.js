@@ -94,8 +94,8 @@ class BroadcastManager {
         recipientCount: selectedContacts.length
       });
 
-      // Simulate progress for better UX
-      this.updateProgress(25, 'Sending messages...');
+      // Enhanced progress simulation with better UX
+      await this.simulateProgress();
       
       // Send the message with numbers and template
       await this.apiService.sendMessage(phoneNumbers, message);
@@ -186,6 +186,25 @@ class BroadcastManager {
         }
       }
     });
+  }
+
+  /**
+   * Simulate progress with enhanced UX
+   */
+  async simulateProgress() {
+    const steps = [
+      { progress: 10, message: 'Validating contacts...' },
+      { progress: 25, message: 'Preparing message...' },
+      { progress: 40, message: 'Connecting to service...' },
+      { progress: 60, message: 'Sending messages...' },
+      { progress: 80, message: 'Processing responses...' },
+      { progress: 95, message: 'Finalizing broadcast...' }
+    ];
+
+    for (const step of steps) {
+      this.updateProgress(step.progress, step.message);
+      await new Promise(resolve => setTimeout(resolve, 300 + Math.random() * 200));
+    }
   }
 
   /**

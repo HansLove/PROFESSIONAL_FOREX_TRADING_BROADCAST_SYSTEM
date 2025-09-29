@@ -384,12 +384,37 @@ class ContactManager {
   }
 
   /**
-   * Show loading state
+   * Show loading state with skeleton screens
    * @param {boolean} show - Whether to show loading
    */
   showLoading(show) {
     if (show) {
-      $('#contactsList').html('<div class="text-center py-4"><div class="spinner-border text-accent" role="status"></div><p class="mt-2">Loading contacts...</p></div>');
+      const skeletonHtml = `
+        <div class="text-center py-4">
+          <div class="spinner-modern mb-3"></div>
+          <p class="text-muted">Loading contacts...</p>
+        </div>
+        <div class="row g-2">
+          ${Array.from({length: 8}, (_, i) => `
+            <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+              <div class="skeleton skeleton-contact">
+                <div class="d-flex align-items-center p-2">
+                  <div class="skeleton skeleton-text short me-2" style="width: 20px; height: 20px; border-radius: 50%;"></div>
+                  <div class="flex-grow-1">
+                    <div class="skeleton skeleton-text medium mb-1"></div>
+                    <div class="skeleton skeleton-text short"></div>
+                    <div class="d-flex gap-1 mt-1">
+                      <div class="skeleton skeleton-text" style="width: 40px; height: 16px; border-radius: 4px;"></div>
+                      <div class="skeleton skeleton-text" style="width: 60px; height: 16px; border-radius: 4px;"></div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+          `).join('')}
+        </div>
+      `;
+      $('#contactsList').html(skeletonHtml);
     }
   }
 

@@ -30,6 +30,9 @@ class ForexBroadcastApp {
       // Bind global events
       this.bindGlobalEvents();
       
+      // Initialize theme
+      this.initializeTheme();
+      
       // Load initial data
       await this.loadInitialData();
       
@@ -72,6 +75,11 @@ class ForexBroadcastApp {
     // Message textarea changes
     $('#customMessage').on('input', () => {
       this.broadcastManager.resetBroadcastState();
+    });
+
+    // Dark mode toggle
+    $('#darkModeToggle').on('click', () => {
+      this.toggleDarkMode();
     });
   }
 
@@ -123,6 +131,135 @@ class ForexBroadcastApp {
    */
   getBroadcastManager() {
     return this.broadcastManager;
+  }
+
+  /**
+   * Toggle dark mode
+   */
+  toggleDarkMode() {
+    const currentTheme = document.documentElement.getAttribute('data-theme');
+    const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+    
+    // Apply theme with smooth transition
+    document.documentElement.setAttribute('data-theme', newTheme);
+    localStorage.setItem('theme', newTheme);
+    
+    // Update icon with animation
+    const icon = $('#darkModeIcon');
+    icon.removeClass('fa-moon fa-sun').addClass('bounce');
+    
+    setTimeout(() => {
+      icon.addClass(newTheme === 'dark' ? 'fa-sun' : 'fa-moon');
+      icon.removeClass('bounce');
+    }, 300);
+    
+    // Show feedback
+    this.showToast(`Switched to ${newTheme} mode`, 'success');
+  }
+
+  /**
+   * Initialize theme from localStorage
+   */
+  initializeTheme() {
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.documentElement.setAttribute('data-theme', savedTheme);
+    
+    // Update icon
+    const icon = $('#darkModeIcon');
+    icon.removeClass('fa-moon fa-sun').addClass(savedTheme === 'dark' ? 'fa-sun' : 'fa-moon');
+  }
+
+  /**
+   * Add mobile-specific gestures and interactions
+   */
+  addMobileGestures() {
+    if (window.innerWidth <= 768) {
+      // Swipe gestures for contact selection
+      let startX = 0;
+      let startY = 0;
+      
+      $('.contact-item-compact').on('touchstart', function(e) {
+        const touch = e.originalEvent.touches[0];
+        startX = touch.clientX;
+        startY = touch.clientY;
+      });
+      
+      $('.contact-item-compact').on('touchend', function(e) {
+        const touch = e.originalEvent.changedTouches[0];
+        const endX = touch.clientX;
+        const endY = touch.clientY;
+        const diffX = startX - endX;
+        const diffY = startY - endY;
+        
+        // Swipe left to select contact
+        if (Math.abs(diffX) > Math.abs(diffY) && diffX > 50) {
+          const checkbox = $(this).find('.form-check-input');
+          if (!checkbox.is(':checked')) {
+            checkbox.prop('checked', true).trigger('change');
+            $(this).addClass('bounce');
+            setTimeout(() => $(this).removeClass('bounce'), 600);
+          }
+        }
+      });
+      
+      // Pull-to-refresh simulation
+      let pullStartY = 0;
+      let isPulling = false;
+      
+      $(document).on('touchstart', function(e) {
+        if ($(window).scrollTop() === 0) {
+          pullStartY = e.originalEvent.touches[0].clientY;
+          isPulling = true;
+        }
+      });
+      
+      $(document).on('touchmove', function(e) {
+        if (isPulling) {
+          const currentY = e.originalEvent.touches[0].clientY;
+          const pullDistance = currentY - pullStartY;
+          
+          if (pullDistance > 100) {
+            // Show pull-to-refresh indicator
+            if (!$('#pullToRefresh').length) {
+              $('body').prepend(`
+                <div id="pullToRefresh" class="text-center py-3" style="background: var(--gradient-accent); color: white; margin-top: -100px; transition: margin-top 0.3s ease;">
+                  <i class="fas fa-arrow-down me-2"></i>
+                  Release to refresh contacts
+                </div>
+              `);
+            }
+          }
+        }
+      });
+      
+      $(document).on('touchend', function(e) {
+        if (isPulling) {
+          const currentY = e.originalEvent.changedTouches[0].clientY;
+          const pullDistance = currentY - pullStartY;
+          
+          if (pullDistance > 100) {
+            // Trigger refresh
+            $('#pullToRefresh').html('<i class="fas fa-spinner fa-spin me-2"></i>Refreshing...');
+            setTimeout(() => {
+              if (window.app && window.app.contactManager) {
+                window.app.contactManager.loadContacts();
+              }
+              $('#pullToRefresh').remove();
+            }, 1000);
+          } else {
+            $('#pullToRefresh').remove();
+          }
+          isPulling = false;
+        }
+      });
+      
+      // Haptic feedback for supported devices
+      if ('vibrate' in navigator) {
+        $('.btn, .template-btn, .contact-item-compact').on('touchstart', function() {
+          navigator.vibrate(10); // Short vibration
+        });
+      }
+    }
   }
 
   /**
@@ -181,6 +318,9 @@ $(document).ready(async () => {
     }).on('touchend', function() {
       $(this).removeClass('touch-active');
     });
+
+    // Add mobile-specific gestures and interactions
+    this.addMobileGestures();
   }
   
   // Handle window resize for responsive updates with performance optimization
