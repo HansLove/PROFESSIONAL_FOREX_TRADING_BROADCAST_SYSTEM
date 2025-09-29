@@ -60,11 +60,13 @@ class ForexBroadcastApp {
     $('#selectAllContacts').on('change', () => this.contactManager.toggleSelectAll());
     $('#onlineContactsOnly').on('change', () => this.contactManager.toggleOnlineOnly());
 
-    // Pagination
+    // Pagination - Mobile Optimized
     $(document).on('click', '.pagination .page-link', (e) => {
       e.preventDefault();
-      const page = parseInt($(e.target).text());
-      this.contactManager.goToPage(page);
+      const page = parseInt($(e.target).data('page')) || parseInt($(e.target).text());
+      if (page && !isNaN(page)) {
+        this.contactManager.goToPage(page);
+      }
     });
 
     // Message textarea changes
@@ -124,18 +126,21 @@ class ForexBroadcastApp {
   }
 
   /**
-   * Show toast notification
+   * Show toast notification - Mobile Optimized
    * @param {string} message - Toast message
    * @param {string} type - Toast type
    */
   showToast(message, type = 'info') {
+    const isMobile = window.innerWidth <= 768;
+    const toastId = 'toast_' + Date.now();
+    
     const toastHtml = `
-      <div class="toast show" role="alert">
+      <div class="toast show" id="${toastId}" role="alert">
         <div class="toast-header bg-${type === 'error' ? 'danger' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : 'info'} text-white">
           <strong class="me-auto">${type.charAt(0).toUpperCase() + type.slice(1)}</strong>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
         </div>
-        <div class="toast-body">
+        <div class="toast-body ${isMobile ? 'small' : ''}">
           ${message}
         </div>
       </div>
@@ -143,9 +148,14 @@ class ForexBroadcastApp {
 
     $('.toast-container').append(toastHtml);
     
+    // Mobile-specific auto-dismiss timing
+    const dismissTime = isMobile ? 3000 : 5000;
+    
     setTimeout(() => {
-      $('.toast-container .toast').remove();
-    }, 5000);
+      $(`#${toastId}`).fadeOut(300, function() {
+        $(this).remove();
+      });
+    }, dismissTime);
   }
 }
 
@@ -153,4 +163,94 @@ class ForexBroadcastApp {
 $(document).ready(async () => {
   window.app = new ForexBroadcastApp();
   await window.app.init();
+  
+  // Mobile-specific enhancements
+  if (window.innerWidth <= 768) {
+    // Add mobile-specific classes
+    $('body').addClass('mobile-device');
+    
+    // Optimize viewport for mobile
+    const viewport = document.querySelector('meta[name="viewport"]');
+    if (viewport) {
+      viewport.setAttribute('content', 'width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes');
+    }
+    
+    // Add touch event listeners for better mobile UX
+    $('.btn, .template-btn, .contact-item-compact').on('touchstart', function() {
+      $(this).addClass('touch-active');
+    }).on('touchend', function() {
+      $(this).removeClass('touch-active');
+    });
+  }
+  
+  // Handle window resize for responsive updates with performance optimization
+  let resizeTimeout;
+  let lastWidth = window.innerWidth;
+  
+  $(window).on('resize', function() {
+    const currentWidth = window.innerWidth;
+    
+    // Only trigger if width change is significant (avoid unnecessary updates)
+    if (Math.abs(currentWidth - lastWidth) < 50) {
+      return;
+    }
+    
+    clearTimeout(resizeTimeout);
+    resizeTimeout = setTimeout(() => {
+      const isMobile = currentWidth <= 768;
+      const wasMobile = lastWidth <= 768;
+      
+      // Only update if mobile state actually changed
+      if (isMobile !== wasMobile) {
+        $('body').toggleClass('mobile-device', isMobile);
+        
+        // Refresh contact display for responsive updates
+        if (window.app && window.app.contactManager) {
+          window.app.contactManager.displayContacts();
+        }
+        
+        // Update broadcast UI for mobile state change
+        if (window.app && window.app.broadcastManager) {
+          window.app.broadcastManager.updateBroadcastUI(window.app.broadcastManager.isBroadcasting);
+        }
+      }
+      
+      lastWidth = currentWidth;
+    }, 250);
+  });
+  
+  // Performance optimization: Debounce scroll events
+  let scrollTimeout;
+  $(window).on('scroll', function() {
+    clearTimeout(scrollTimeout);
+    scrollTimeout = setTimeout(() => {
+      // Only run scroll-based optimizations if needed
+      if (window.app && window.app.contactManager) {
+        // Lazy load contacts if needed (future enhancement)
+      }
+    }, 100);
+  });
+  
+  // Performance optimization: Intersection Observer for lazy loading
+  if ('IntersectionObserver' in window) {
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          // Lazy load content when it comes into view
+          const element = entry.target;
+          if (element.dataset.lazyLoad) {
+            // Future enhancement: Load content on demand
+          }
+        }
+      });
+    }, {
+      rootMargin: '50px 0px',
+      threshold: 0.1
+    });
+    
+    // Observe elements that might need lazy loading
+    $('[data-lazy-load]').each(function() {
+      observer.observe(this);
+    });
+  }
 });

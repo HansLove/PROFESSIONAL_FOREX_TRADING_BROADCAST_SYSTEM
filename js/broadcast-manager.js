@@ -50,7 +50,7 @@ class BroadcastManager {
   }
 
   /**
-   * Send broadcast message
+   * Send broadcast message - Mobile Optimized
    */
   async sendBroadcast() {
     if (this.isBroadcasting || !this.isPrepared) return;
@@ -67,9 +67,22 @@ class BroadcastManager {
       return;
     }
 
+    // Mobile confirmation for large broadcasts
+    if (selectedContacts.length > 10) {
+      const isMobile = window.innerWidth <= 768;
+      const confirmMessage = isMobile 
+        ? `Send to ${selectedContacts.length} contacts?` 
+        : `Are you sure you want to send this broadcast to ${selectedContacts.length} recipients?`;
+      
+      if (!confirm(confirmMessage)) {
+        return;
+      }
+    }
+
     try {
       this.isBroadcasting = true;
-      $('#sendBroadcast').prop('disabled', true).html('<i class="fas fa-spinner fa-spin me-1"></i>Sending...');
+      this.updateBroadcastUI(true);
+      this.updateProgress(0, 'Preparing broadcast...');
 
       // Extract phone numbers from selected contacts
       const phoneNumbers = selectedContacts.map(contact => contact.phone);
@@ -81,21 +94,27 @@ class BroadcastManager {
         recipientCount: selectedContacts.length
       });
 
+      // Simulate progress for better UX
+      this.updateProgress(25, 'Sending messages...');
+      
       // Send the message with numbers and template
       await this.apiService.sendMessage(phoneNumbers, message);
 
+      this.updateProgress(100, 'Broadcast completed!');
       this.showToast(`Broadcast sent to ${selectedContacts.length} recipients successfully!`, 'success');
       this.contactManager.updateStats();
       
-      // Reset form
-      this.isPrepared = false;
-      $('#prepareBroadcast').prop('disabled', false);
-      $('#sendBroadcast').prop('disabled', true).html('<i class="fas fa-paper-plane me-1"></i>Send Broadcast');
+      // Reset form after delay
+      setTimeout(() => {
+        this.resetBroadcastState();
+      }, 2000);
       
     } catch (error) {
+      this.updateProgress(0, 'Broadcast failed');
       this.showToast('Error sending broadcast: ' + error.message, 'error');
     } finally {
       this.isBroadcasting = false;
+      this.updateBroadcastUI(false);
     }
   }
 
@@ -114,21 +133,77 @@ class BroadcastManager {
     this.isPrepared = false;
     $('#prepareBroadcast').prop('disabled', false);
     $('#sendBroadcast').prop('disabled', true);
+    this.updateProgress(0, 'Ready to broadcast');
+    this.updateBroadcastUI(false);
   }
 
   /**
-   * Show toast notification
+   * Update broadcast UI for mobile optimization
+   * @param {boolean} isBroadcasting - Whether currently broadcasting
+   */
+  updateBroadcastUI(isBroadcasting) {
+    const isMobile = window.innerWidth <= 768;
+    
+    if (isBroadcasting) {
+      $('#prepareBroadcast').prop('disabled', true);
+      $('#sendBroadcast').prop('disabled', true);
+      
+      if (isMobile) {
+        $('#sendBroadcast').html('<i class="fas fa-spinner fa-spin me-1"></i>Sending...');
+      } else {
+        $('#sendBroadcast').html('<i class="fas fa-spinner fa-spin me-1"></i>Sending Broadcast...');
+      }
+    } else {
+      $('#prepareBroadcast').prop('disabled', false);
+      $('#sendBroadcast').prop('disabled', !this.isPrepared);
+      
+      if (isMobile) {
+        $('#sendBroadcast').html('<i class="fas fa-paper-plane me-2"></i>Send');
+      } else {
+        $('#sendBroadcast').html('<i class="fas fa-paper-plane me-2"></i>Send Broadcast');
+      }
+    }
+  }
+
+  /**
+   * Update progress bar and text - Performance Optimized
+   * @param {number} percentage - Progress percentage (0-100)
+   * @param {string} text - Progress text
+   */
+  updateProgress(percentage, text) {
+    // Use requestAnimationFrame for smooth progress updates
+    requestAnimationFrame(() => {
+      $('#broadcastProgress').css('width', percentage + '%');
+      $('#progressText').text(text);
+      
+      // Add visual feedback for mobile
+      if (window.innerWidth <= 768) {
+        const progressBar = $('#broadcastProgress');
+        if (percentage > 0 && percentage < 100) {
+          progressBar.addClass('progress-bar-animated');
+        } else {
+          progressBar.removeClass('progress-bar-animated');
+        }
+      }
+    });
+  }
+
+  /**
+   * Show toast notification - Mobile Optimized
    * @param {string} message - Toast message
    * @param {string} type - Toast type
    */
   showToast(message, type = 'info') {
+    const isMobile = window.innerWidth <= 768;
+    const toastId = 'toast_' + Date.now();
+    
     const toastHtml = `
-      <div class="toast show" role="alert">
+      <div class="toast show" id="${toastId}" role="alert">
         <div class="toast-header bg-${type === 'error' ? 'danger' : type === 'success' ? 'success' : type === 'warning' ? 'warning' : 'info'} text-white">
           <strong class="me-auto">${type.charAt(0).toUpperCase() + type.slice(1)}</strong>
           <button type="button" class="btn-close btn-close-white" data-bs-dismiss="toast"></button>
         </div>
-        <div class="toast-body">
+        <div class="toast-body ${isMobile ? 'small' : ''}">
           ${message}
         </div>
       </div>
@@ -136,9 +211,14 @@ class BroadcastManager {
 
     $('.toast-container').append(toastHtml);
     
+    // Mobile-specific auto-dismiss timing
+    const dismissTime = isMobile ? 3000 : 5000;
+    
     setTimeout(() => {
-      $('.toast-container .toast').remove();
-    }, 5000);
+      $(`#${toastId}`).fadeOut(300, function() {
+        $(this).remove();
+      });
+    }, dismissTime);
   }
 }
 
