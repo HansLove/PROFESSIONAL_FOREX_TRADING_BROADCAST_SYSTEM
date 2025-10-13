@@ -16,6 +16,7 @@ class BroadcastManager {
    */
   init() {
     this.bindEvents();
+    this.bindFolderEvents();
   }
 
   /**
@@ -24,6 +25,77 @@ class BroadcastManager {
   bindEvents() {
     $('#prepareBroadcast').on('click', () => this.prepareBroadcast());
     $('#sendBroadcast').on('click', () => this.sendBroadcast());
+  }
+
+  /**
+   * Bind folder-related events
+   */
+  bindFolderEvents() {
+    // Listen for folder broadcast requests
+    $(document).on('folderBroadcastRequested', (event, data) => {
+      this.handleFolderBroadcast(data.folderId, data.folderName, data.contactCount);
+    });
+  }
+
+  /**
+   * Handle folder broadcast request
+   * @param {number} folderId - Folder ID to broadcast to
+   * @param {string} folderName - Folder name for display
+   * @param {number} contactCount - Number of contacts in folder
+   */
+  async handleFolderBroadcast(folderId, folderName, contactCount) {
+    const message = this.templateManager.getCurrentMessage();
+
+    if (!message) {
+      this.showToast('Please select a template or enter a custom message first', 'warning');
+      return;
+    }
+
+    // Mobile confirmation for large broadcasts
+    if (contactCount > 10) {
+      const isMobile = window.innerWidth <= 768;
+      const confirmMessage = isMobile 
+        ? `Send to ${contactCount} contacts in ${folderName}?` 
+        : `Are you sure you want to send this broadcast to ${contactCount} recipients in folder "${folderName}"?`;
+      
+      if (!confirm(confirmMessage)) {
+        return;
+      }
+    }
+
+    try {
+      this.isBroadcasting = true;
+      this.updateBroadcastUI(true);
+      this.updateProgress(0, `Preparing broadcast to ${folderName}...`);
+
+      console.log('Sending folder broadcast with:', {
+        folderId: folderId,
+        template: message,
+        contactCount: contactCount
+      });
+
+      // Enhanced progress simulation with better UX
+      await this.simulateProgress();
+      
+      // Send the message to the folder
+      await this.apiService.sendToFolder(folderId, message);
+
+      this.updateProgress(100, 'Folder broadcast completed!');
+      this.showToast(`Broadcast sent to ${contactCount} recipients in "${folderName}" successfully!`, 'success');
+      this.contactManager.updateStats();
+      
+      // Reset form after delay
+      setTimeout(() => {
+        this.resetBroadcastState();
+      }, 2000);
+      
+    } catch (error) {
+      this.updateProgress(0, 'Folder broadcast failed');
+      this.showToast('Error sending folder broadcast: ' + error.message, 'error');
+    } finally {
+      this.isBroadcasting = false;
+      this.updateBroadcastUI(false);
+    }
   }
 
   /**

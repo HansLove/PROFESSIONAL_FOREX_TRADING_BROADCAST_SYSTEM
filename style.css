@@ -2415,3 +2415,143 @@ body.mobile-device textarea {
     transform: none;
   }
 }
+
+/* Folder-specific styles */
+.folder-container {
+  background: var(--bg-card);
+  border: 1px solid var(--border) !important;
+  transition: var(--transition-smooth);
+  box-shadow: var(--shadow);
+}
+
+.folder-container:hover {
+  border-color: var(--border-hover) !important;
+  box-shadow: var(--shadow-hover);
+}
+
+.folder-header {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%) !important;
+  border-bottom: 1px solid var(--border);
+  transition: var(--transition-smooth);
+}
+
+.folder-header:hover {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%) !important;
+  color: white;
+}
+
+.folder-header:hover .folder-info h6,
+.folder-header:hover .folder-info small {
+  color: white !important;
+}
+
+.folder-contacts {
+  background: var(--bg-primary);
+  transition: var(--transition-smooth);
+}
+
+.folder-broadcast-btn {
+  background: linear-gradient(135deg, var(--success) 0%, #059669 100%);
+  border: none;
+  color: white;
+  transition: var(--transition-smooth);
+}
+
+.folder-broadcast-btn:hover:not(:disabled) {
+  background: linear-gradient(135deg, #059669 0%, #047857 100%);
+  color: white;
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-hover);
+}
+
+.folder-broadcast-btn:disabled {
+  background: var(--text-secondary);
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.folder-toggle-btn {
+  background: var(--bg-card);
+  border: 1px solid var(--border);
+  transition: var(--transition-smooth);
+}
+
+.folder-toggle-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+  transform: translateY(-1px);
+}
+
+.folder-checkbox:checked {
+  background-color: var(--accent);
+  border-color: var(--accent);
+}
+
+.folder-checkbox:focus {
+  box-shadow: 0 0 0 0.2rem rgba(59, 130, 246, 0.25);
+}
+
+/* Animation for folder expansion */
+.folder-contacts {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease-in-out;
+}
+
+.folder-contacts.show {
+  max-height: 1000px;
+}
+
+/* Mobile optimizations for folders */
+@media (max-width: 768px) {
+  .folder-header {
+    padding: 1rem !important;
+  }
+  
+  .folder-header .d-flex {
+    flex-direction: column;
+    align-items: flex-start !important;
+    gap: 1rem;
+  }
+  
+  .folder-header .d-flex > div:last-child {
+    width: 100%;
+    justify-content: space-between;
+  }
+  
+  .folder-broadcast-btn {
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+  }
+  
+  .folder-toggle-btn {
+    font-size: 0.875rem;
+    padding: 0.375rem 0.75rem;
+  }
+}
+
+/* Dark mode folder styles */
+[data-theme="dark"] .folder-header {
+  background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-card) 100%) !important;
+}
+
+[data-theme="dark"] .folder-header:hover {
+  background: linear-gradient(135deg, var(--accent) 0%, var(--accent-hover) 100%) !important;
+}
+
+[data-theme="dark"] .folder-contacts {
+  background: var(--bg-primary);
+}
+
+[data-theme="dark"] .folder-toggle-btn {
+  background: var(--bg-card);
+  border-color: var(--border);
+  color: var(--text-primary);
+}
+
+[data-theme="dark"] .folder-toggle-btn:hover {
+  background: var(--accent);
+  border-color: var(--accent);
+  color: white;
+}

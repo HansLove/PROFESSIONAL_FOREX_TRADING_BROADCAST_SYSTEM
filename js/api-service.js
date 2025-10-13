@@ -9,7 +9,9 @@ class ApiService {
       contacts: `${this.API_BASE}/n/get/all`,
       addContact: `${this.API_BASE}/n/add`,
       sendMessage: `${this.API_BASE}/m/send/to/numbers`,
-      getAllNumbers: `${this.API_BASE}/n/get/all`
+      getAllNumbers: `${this.API_BASE}/n/get/all`,
+      getFolders: `${this.API_BASE}/f`,
+      sendToFolder: `${this.API_BASE}/send/to/folder`
     };
   }
 
@@ -136,6 +138,60 @@ class ApiService {
         responseText: error.responseText
       });
       throw new Error('Failed to send message');
+    }
+  }
+
+  /**
+   * Fetch folders data from the API
+   * @returns {Promise<Array>} Array of folder objects with numbers
+   */
+  async getFolders() {
+    try {
+      const response = await $.ajax({
+        url: this.API_ENDPOINTS.getFolders,
+        type: 'GET',
+        dataType: 'json'
+      });
+      return response;
+    } catch (error) {
+      console.error('Error fetching folders:', error);
+      throw new Error('Failed to fetch folders from API');
+    }
+  }
+
+  /**
+   * Send broadcast message to a specific folder
+   * @param {number} folderId - Folder ID to send to
+   * @param {string} template - Message template to send
+   * @returns {Promise<Object>} Response from API
+   */
+  async sendToFolder(folderId, template) {
+    try {
+      const requestData = {
+        folder: folderId,
+        template: template
+      };
+
+      console.log('API Request to:', this.API_ENDPOINTS.sendToFolder);
+      console.log('Request data:', requestData);
+
+      const response = await $.ajax({
+        url: this.API_ENDPOINTS.sendToFolder,
+        type: 'POST',
+        contentType: 'application/json',
+        data: JSON.stringify(requestData)
+      });
+
+      console.log('API Response:', response);
+      return response;
+    } catch (error) {
+      console.error('Error sending to folder:', error);
+      console.error('Error details:', {
+        status: error.status,
+        statusText: error.statusText,
+        responseText: error.responseText
+      });
+      throw new Error('Failed to send message to folder');
     }
   }
 

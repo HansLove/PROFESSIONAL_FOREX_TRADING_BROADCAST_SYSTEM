@@ -6,9 +6,11 @@ class ContactManager {
   constructor(apiService) {
     this.apiService = apiService;
     this.contacts = [];
+    this.folders = [];
     this.currentPage = 1;
     this.contactsPerPage = 10;
     this.filteredContacts = [];
+    this.filteredFolders = [];
   }
 
   /**
@@ -19,24 +21,69 @@ class ContactManager {
     try {
       this.showLoading(true);
       
-      // Try to load from the new numbers API first
+      // Try to load folders first, then fallback to individual contacts
       try {
-        const numbers = await this.apiService.getAllNumbers();
-        this.contacts = this.processNumbersData(numbers);
+        const foldersData = await this.apiService.getFolders();
+        this.folders = this.processFoldersData(foldersData);
+        this.filteredFolders = [...this.folders];
+        this.displayFolders();
       } catch (error) {
-        console.warn('Failed to load from numbers API, falling back to contacts API:', error);
-        // Fallback to original contacts API
-        this.contacts = await this.apiService.loadContacts();
+        console.warn('Failed to load folders, falling back to individual contacts:', error);
+        // Fallback to individual contacts
+        try {
+          const numbers = await this.apiService.getAllNumbers();
+          this.contacts = this.processNumbersData(numbers);
+        } catch (error2) {
+          console.warn('Failed to load from numbers API, falling back to contacts API:', error2);
+          // Fallback to original contacts API
+          this.contacts = await this.apiService.loadContacts();
+        }
+        
+        this.filteredContacts = [...this.contacts];
+        this.displayContacts();
       }
       
-      this.filteredContacts = [...this.contacts];
-      this.displayContacts();
       this.updateStats();
     } catch (error) {
       this.showToast('Error loading contacts: ' + error.message, 'error');
     } finally {
       this.showLoading(false);
     }
+  }
+
+  /**
+   * Process folders data from the API
+   * @param {Array} foldersData - API response with folders array
+   * @returns {Array} Processed folder objects
+   */
+  processFoldersData(foldersData) {
+    if (!Array.isArray(foldersData)) {
+      console.warn('Invalid folders data structure:', foldersData);
+      return [];
+    }
+
+    return foldersData.map(folder => ({
+      id: folder.id,
+      name: folder.name,
+      instance: folder.instance,
+      proyecto_id: folder.proyecto_id,
+      numbers: (folder.numbers || []).map(number => ({
+        id: `folder_${folder.id}_num_${number.number}`,
+        userName: number.name || `Contact ${number.number}`,
+        phone: number.number,
+        status: this.getContactStatus(number),
+        selected: false,
+        source: 'folder_api',
+        interview: number.interview || false,
+        subscription: number.suscription || false,
+        active: number.active || false,
+        tag: number.tag,
+        proyecto_id: number.proyecto_id,
+        folder_id: number.folder_id
+      })),
+      selected: false,
+      expanded: false
+    }));
   }
 
   /**
@@ -101,6 +148,76 @@ class ContactManager {
     } catch (error) {
       this.showToast('Error adding contact: ' + error.message, 'error');
     }
+  }
+
+  /**
+   * Display folders in the UI - Mobile Optimized
+   */
+  displayFolders() {
+    const isMobile = window.innerWidth <= 768;
+
+    const foldersHtml = this.filteredFolders.map(folder => `
+      <div class="col-12 mb-3">
+        <div class="folder-container border rounded">
+          <div class="folder-header d-flex align-items-center justify-content-between p-3 bg-light">
+            <div class="d-flex align-items-center">
+              <div class="form-check me-3">
+                <input class="form-check-input folder-checkbox" type="checkbox" 
+                       value="${folder.id}" ${folder.selected ? 'checked' : ''}>
+              </div>
+              <div class="folder-info">
+                <h6 class="mb-1 fw-bold">
+                  <i class="fas fa-folder me-2"></i>${folder.name}
+                </h6>
+                <small class="text-muted">${folder.instance} • ${folder.numbers.length} contacts</small>
+              </div>
+            </div>
+            <div class="d-flex align-items-center gap-2">
+              <button class="btn btn-outline-primary btn-sm folder-broadcast-btn" 
+                      data-folder-id="${folder.id}" 
+                      data-folder-name="${folder.name}"
+                      ${folder.numbers.length === 0 ? 'disabled' : ''}>
+                <i class="fas fa-paper-plane me-1"></i>
+                <span class="d-none d-sm-inline">Broadcast</span>
+              </button>
+              <button class="btn btn-outline-secondary btn-sm folder-toggle-btn" 
+                      data-folder-id="${folder.id}">
+                <i class="fas fa-chevron-${folder.expanded ? 'up' : 'down'}"></i>
+              </button>
+            </div>
+          </div>
+          <div class="folder-contacts ${folder.expanded ? 'show' : ''}" data-folder-id="${folder.id}">
+            <div class="p-3">
+              ${folder.numbers.length === 0 ? 
+                '<div class="text-center text-muted py-3">No contacts in this folder</div>' :
+                '<div class="row g-2">' + folder.numbers.map(contact => `
+                  <div class="col-12 col-sm-6 col-md-4 col-lg-3">
+                    <div class="contact-item-compact d-flex align-items-center p-2 border rounded">
+                      <div class="form-check me-2">
+                        <input class="form-check-input contact-checkbox" type="checkbox" 
+                               value="${contact.id}" ${contact.selected ? 'checked' : ''}>
+                      </div>
+                      <span class="status-indicator status-${contact.status} me-2"></span>
+                      <div class="flex-grow-1">
+                        <div class="fw-bold text-primary ${isMobile ? 'small' : ''}">${contact.userName}</div>
+                        <div class="text-secondary ${isMobile ? 'small' : ''}">${contact.phone}</div>
+                        <div class="d-flex flex-wrap gap-1 mt-1">
+                          ${this.getContactBadges(contact)}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                `).join('') + '</div>'
+              }
+            </div>
+          </div>
+        </div>
+      </div>
+    `).join('');
+
+    $('#contactsList').html(foldersHtml);
+    this.bindFolderEvents();
+    this.updateQuickStats();
   }
 
   /**
@@ -232,14 +349,93 @@ class ContactManager {
   }
 
   /**
+   * Bind folder-related events
+   */
+  bindFolderEvents() {
+    // Folder checkbox events
+    $('.folder-checkbox').on('change', (e) => {
+      const folderId = parseInt($(e.target).val());
+      const folder = this.folders.find(f => f.id === folderId);
+      if (folder) {
+        folder.selected = $(e.target).is(':checked');
+        // Select/deselect all contacts in this folder
+        folder.numbers.forEach(contact => {
+          contact.selected = folder.selected;
+        });
+        this.displayFolders();
+        this.updateQuickStats();
+      }
+    });
+
+    // Folder toggle events
+    $('.folder-toggle-btn').on('click', (e) => {
+      const folderId = parseInt($(e.target).closest('.folder-toggle-btn').data('folder-id'));
+      const folder = this.folders.find(f => f.id === folderId);
+      if (folder) {
+        folder.expanded = !folder.expanded;
+        this.displayFolders();
+      }
+    });
+
+    // Folder broadcast events
+    $('.folder-broadcast-btn').on('click', (e) => {
+      const folderId = parseInt($(e.target).closest('.folder-broadcast-btn').data('folder-id'));
+      const folderName = $(e.target).closest('.folder-broadcast-btn').data('folder-name');
+      const folder = this.folders.find(f => f.id === folderId);
+      
+      if (folder && folder.numbers.length > 0) {
+        // Trigger folder broadcast event
+        $(document).trigger('folderBroadcastRequested', {
+          folderId: folderId,
+          folderName: folderName,
+          contactCount: folder.numbers.length
+        });
+      }
+    });
+
+    this.bindContactCheckboxes();
+  }
+
+  /**
    * Bind checkbox events
    */
   bindContactCheckboxes() {
     $('.contact-checkbox').on('change', (e) => {
       const contactId = $(e.target).val();
-      const contact = this.contacts.find(c => c.id === contactId);
+      
+      // Handle both individual contacts and folder contacts
+      let contact = this.contacts.find(c => c.id === contactId);
+      let folder = null;
+      
+      if (!contact) {
+        // Find contact in folders
+        for (const f of this.folders) {
+          contact = f.numbers.find(c => c.id === contactId);
+          if (contact) {
+            folder = f;
+            break;
+          }
+        }
+      }
+      
       if (contact) {
         contact.selected = $(e.target).is(':checked');
+        
+        // Update folder selection status if this is a folder contact
+        if (folder) {
+          const allSelected = folder.numbers.every(c => c.selected);
+          const noneSelected = folder.numbers.every(c => !c.selected);
+          
+          if (allSelected) {
+            folder.selected = true;
+          } else if (noneSelected) {
+            folder.selected = false;
+          }
+          
+          // Update folder checkbox
+          $(`.folder-checkbox[value="${folder.id}"]`).prop('checked', folder.selected);
+        }
+        
         this.updateQuickStats();
       }
     });
@@ -344,7 +540,23 @@ class ContactManager {
    * @returns {Array} Array of selected contacts
    */
   getSelectedContacts() {
-    return this.contacts.filter(c => c.selected);
+    const selectedContacts = this.contacts.filter(c => c.selected);
+    
+    // Add selected contacts from folders
+    this.folders.forEach(folder => {
+      const folderSelectedContacts = folder.numbers.filter(c => c.selected);
+      selectedContacts.push(...folderSelectedContacts);
+    });
+    
+    return selectedContacts;
+  }
+
+  /**
+   * Get selected folders
+   * @returns {Array} Array of selected folders
+   */
+  getSelectedFolders() {
+    return this.folders.filter(f => f.selected);
   }
 
   /**
@@ -362,10 +574,18 @@ class ContactManager {
    * Update main stats display
    */
   updateStats() {
-    const totalContacts = this.contacts.length;
-    const activeContacts = this.getActiveContacts().length;
-    const interviewedContacts = this.getInterviewedContacts().length;
-    const subscribedContacts = this.getSubscribedContacts().length;
+    // Calculate stats from both individual contacts and folder contacts
+    let totalContacts = this.contacts.length;
+    let allContacts = [...this.contacts];
+    
+    this.folders.forEach(folder => {
+      totalContacts += folder.numbers.length;
+      allContacts.push(...folder.numbers);
+    });
+    
+    const activeContacts = allContacts.filter(c => c.active).length;
+    const interviewedContacts = allContacts.filter(c => c.interview).length;
+    const subscribedContacts = allContacts.filter(c => c.subscription).length;
     
     $('#totalContacts').text(totalContacts);
     $('#sentMessages').text(interviewedContacts);
